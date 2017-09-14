@@ -1,0 +1,186 @@
+#!/bin/bash
+# Date: 2017-9-13
+# Usage: deploy eru-core, eru-agent in one node
+#        and run eru-lambda for example
+
+# root
+if [[ `whoami` != "root" ]];then
+  echo "root permission required"
+fi
+
+# yum
+yum update -y
+yum install -y epel-release yum-utils device-mapper-persistent-data lvm2
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# ip
+export IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+echo 'Current ip:' ${IP}
+
+# docker
+yum install -y docker-ce
+mkdir -p /etc/docker/tls
+echo '{
+    "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
+    "tlsverify": true,
+    "tlscacert": "/etc/docker/tls/ca.crt",
+    "tlscert": "/etc/docker/tls/server.crt",
+    "tlskey": "/etc/docker/tls/server.key",
+    "cluster-store": "etcd://127.0.0.1:2379",
+    "dns": ["114.114.114.114"],
+    "registry-mirrors": ["https://registry.docker-cn.com"]
+}' > /etc/docker/daemon.json
+openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 3650 -subj /C=CN
+openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj /CN=${IP}
+openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -in server.csr -out server.crt -days 3650
+openssl req -newkey rsa:2048 -nodes -keyout client.key -out client.csr -subj /CN=client
+openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -in client.csr -out client.crt -days 3650
+chmod 600 ca.key client.key server.key
+rm -rf server.csr client.csr
+mv ca.* client.* server.* /etc/docker/tls
+
+# etcd
+yum install -y etcd
+export ETCD_VER=v3.2.7
+export DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download
+curl -L ${DOWNLOAD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
+mkdir -p /tmp/etcd
+tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd --strip-components=1
+mv /tmp/etcd/etcd /usr/bin/etcd
+mv /tmp/etcd/etcdctl /usr/bin/etcdctl
+systemctl enable etcd
+systemctl start etcd
+
+# start docker
+systemctl enable docker
+systemctl start docker
+
+# calico
+curl -L https://github.com/projectcalico/calicoctl/releases/download/v1.5.0/calicoctl -o /usr/bin/calicoctl
+chmod +x /usr/bin/calicoctl
+docker pull calico/node
+calicoctl node run --node-image=calico/node
+cat << EOF | calicoctl create -f -
+- apiVersion: v1
+  kind: ipPool
+  metadata:
+    cidr: 10.213.0.0/16
+  spec:
+    nat-outgoing: true
+EOF
+docker network create --driver calico --ipam-driver calico-ipam --subnet 10.213.0.0/16 etest
+
+# eru
+mkdir -p /etc/eru/tls
+echo 'log_level: "DEBUG"
+bind: ":5001"
+appdir: "/home"
+backupdir: "/tmp/backup"
+etcd:
+    - "http://127.0.0.1:2379"
+etcd_lock_prefix: "/eru-core/_lock"
+statsd: "127.0.0.1:8125"
+
+zone: "eru-test"
+image_cache: 2
+global_timeout: 300
+lock_timeout: 30
+
+git:
+    public_key: "***REMOVED***"
+    private_key: "***REMOVED***"
+    token: "***REMOVED***"
+    scm_type: "github"
+
+docker:
+    log_driver: "json-file"
+    network_mode: "bridge"
+    cert_path: "/etc/eru/tls"
+    hub: "hub.docker.com"
+    hub_prefix: "projecteru2"
+    build_pod: "eru-test"
+    local_dns: true
+
+scheduler:
+    maxshare: -1
+    sharebase: 10
+
+syslog:
+    address: "udp://localhost:5111"
+    facility: "daemon"
+    format: "rfc5424"
+' > /etc/eru/core.yaml
+docker run -d -e IN_DOCKER=1 \
+  --name eru-core --net host \
+  --restart always \
+  -v /etc/eru:/etc/eru \
+  -v /tmp/backup:/tmp/backup \
+  projecteru2/core \
+  /usr/bin/eru-core
+
+# Agent
+echo 'pid: /tmp/agent.pid
+docker:
+  endpoint: unix:///var/run/docker.sock
+etcd:
+  prefix: agent
+  etcd:
+    - http://127.0.0.1:2379
+metrics:
+  step: 30
+  transfers:
+    - 127.0.0.1:8125
+api:
+  addr: 127.0.0.1:12345
+log:
+  forwards:
+    - udp://127.0.0.1:5144
+  stdout: False
+' > /etc/eru/agent.yaml
+docker run -d --privileged -e IN_DOCKER=1 \
+  --name eru-agent --net host \
+  --restart always \
+  -v /sys/fs/cgroup/:/sys/fs/cgroup/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /proc/:/hostProc/ \
+  -v /etc/eru:/etc/eru \
+  projecteru2/agent \
+  /usr/bin/eru-agent
+
+# pod and node
+# simulate 2C 0.5G
+etcdctl set /eru-core/pod/test/info '{"name":"test","desc":"lambda testing","favor":"CPU"}'
+etcdctl set /eru-core/pod/test/node/${HOSTNAME}/info "{\"name\":\"${HOSTNAME}\",\"endpoint\":\"tcp://127.0.0.1:2376\",\"podname\":\"test\",\"public\":false,\"available\":true,\"cpu\":{\"0\":10,\"1\":10},\"memcap\":536870912}"
+CAPEM=`cat /etc/docker/tls/ca.crt`
+KEYPEM=`cat /etc/docker/tls/client.key`
+CERTPEM=`cat /etc/docker/tls/client.crt`
+etcdctl set /eru-core/pod/test/node/${HOSTNAME}/ca.pem " ${CAPEM}"
+etcdctl set /eru-core/pod/test/node/${HOSTNAME}/key.pem " ${KEYPEM}"
+etcdctl set /eru-core/pod/test/node/${HOSTNAME}/cert.pem " ${CERTPEM}"
+mkdir -p /etc/eru/tls/127.0.0.1/
+cp /etc/docker/tls/ca.crt /etc/eru/tls/127.0.0.1/ca.pem
+cp /etc/docker/tls/client.key /etc/eru/tls/127.0.0.1/key.pem
+cp /etc/docker/tls/client.crt /etc/eru/tls/127.0.0.1/cert.pem
+
+# lambda
+echo 'servers:
+  - 127.0.0.1:5001
+concurrency: 15
+default:
+  adminpod: "test"
+  adminvolumes:
+    - "/tmp:/tmp/host"
+  pod: "test"
+  image: "alpine:3.6"
+  network: "etest"
+  working_dir: "/tmp"
+  cpu: 1.0
+  memory: 33554432
+  timeout: 15
+  openstdin: false
+' > /etc/eru/lambda.yaml
+docker run -it --rm -e IN_DOCKER=1 \
+  --name eru-lambda --net host \
+  -v /etc/eru:/etc/eru \
+  projecteru2/lambda \
+  /usr/bin/lambda --name test --command date --raw

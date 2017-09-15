@@ -33,9 +33,9 @@ etcdctl set /eru-core/pod/test/node/${HOSTNAME}/info "{\"name\":\"${HOSTNAME}\",
 CAPEM=`cat /etc/docker/tls/ca.crt`
 KEYPEM=`cat /etc/docker/tls/client.key`
 CERTPEM=`cat /etc/docker/tls/client.crt`
-etcdctl set /eru-core/pod/test/node/${HOSTNAME}/ca.pem " ${CAPEM}"
-etcdctl set /eru-core/pod/test/node/${HOSTNAME}/key.pem " ${KEYPEM}"
-etcdctl set /eru-core/pod/test/node/${HOSTNAME}/cert.pem " ${CERTPEM}"
+etcdctl set -- /eru-core/pod/test/node/${HOSTNAME}/ca.pem "${CAPEM}"
+etcdctl set -- /eru-core/pod/test/node/${HOSTNAME}/key.pem "${KEYPEM}"
+etcdctl set -- /eru-core/pod/test/node/${HOSTNAME}/cert.pem "${CERTPEM}"
 
 # run lambda test
 ./lambda.sh

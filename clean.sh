@@ -9,6 +9,7 @@ fi
 systemctl stop docker
 rm -rf /var/lib/docker
 rm -rf /etc/docker
+rm -rf /etc/eru
 
 # etcd
 systemctl stop etcd

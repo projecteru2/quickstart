@@ -22,7 +22,7 @@ systemctl start docker
 ./calico.sh
 
 # eru
-mkdir -p /etc/eru/tls
+mkdir -p /etc/eru
 ./core.sh
 ./agent.sh
 

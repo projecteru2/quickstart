@@ -6,7 +6,6 @@ if [[ `whoami` != "root" ]];then
 fi
 
 # eru
-mkdir -p /etc/eru/tls
 echo 'log_level: "DEBUG"
 bind: ":5001"
 appdir: "/home"
@@ -32,7 +31,7 @@ git:
 docker:
     log_driver: "json-file"
     network_mode: "bridge"
-    cert_path: "/etc/eru/tls"
+    cert_path: "/tmp"
     hub: "hub.docker.com"
     hub_prefix: "projecteru2"
     build_pod: "eru-test"

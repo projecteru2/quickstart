@@ -46,8 +46,9 @@ syslog:
     facility: "daemon"
     format: "rfc5424"
 ' > /etc/eru/core.yaml
-docker run -d -e IN_DOCKER=1 \
-  --name eru-core --net host \
+docker run -d \
+  --name eru_core_$HOSTNAME \
+  --net host \
   --restart always \
   -v /etc/eru:/etc/eru \
   -v /tmp/backup:/tmp/backup \

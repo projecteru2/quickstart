@@ -23,8 +23,8 @@ systemctl start docker
 
 # eru
 mkdir -p /etc/eru
-./core.sh
 ./agent.sh
+./core.sh
 
 # pod and node
 # simulate 2C 0.5G

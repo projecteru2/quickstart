@@ -28,7 +28,6 @@ docker run -d --privileged \
   --name eru_agent_$HOSTNAME \
   --net host \
   --restart always \
-  --log-driver none \
   -v /sys/fs/cgroup/:/sys/fs/cgroup/ \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /proc/:/hostProc/ \

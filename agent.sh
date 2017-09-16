@@ -21,7 +21,7 @@ api:
   addr: 127.0.0.1:12345
 log:
   forwards:
-    - udp://127.0.0.1:5144
+    - tcp://127.0.0.1:5144
   stdout: False
 ' > /etc/eru/agent.yaml
 docker run -d --privileged \

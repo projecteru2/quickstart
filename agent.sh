@@ -6,7 +6,12 @@ if [[ `whoami` != "root" ]];then
 fi
 
 # Agent
-echo 'pid: /tmp/agent.pid
+export STATSD="127.0.0.1:8125"
+export LOGS="tcp://127.0.0.1:5144"
+export APILISTEN="127.0.0.1:12345"
+
+mkdir -p /etc/eru
+echo "pid: /tmp/agent.pid
 docker:
   endpoint: unix:///var/run/docker.sock
 etcd:
@@ -16,14 +21,14 @@ etcd:
 metrics:
   step: 30
   transfers:
-    - 127.0.0.1:8125
+    - ${STATSD}
 api:
-  addr: 127.0.0.1:12345
+  addr: ${APILISTEN}
 log:
   forwards:
-    - tcp://127.0.0.1:5144
+    - ${LOGS}
   stdout: False
-' > /etc/eru/agent.yaml
+" > /etc/eru/agent.yaml
 docker run -d --privileged \
   --name eru_agent_$HOSTNAME \
   --net host \

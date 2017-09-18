@@ -6,7 +6,10 @@ if [[ `whoami` != "root" ]];then
 fi
 
 # calico
-curl -L https://github.com/projectcalico/calicoctl/releases/download/v1.5.0/calicoctl -o /usr/bin/calicoctl
+export CALICOCTL_VER=v1.5.0
+export NETPOOL=10.213.0.0/16
+export NETNAME="etest"
+curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl
 chmod +x /usr/bin/calicoctl
 docker pull calico/node
 calicoctl node run --node-image=calico/node
@@ -14,8 +17,8 @@ cat << EOF | calicoctl create -f -
 - apiVersion: v1
   kind: ipPool
   metadata:
-    cidr: 10.213.0.0/16
+    cidr: ${NETPOOL}
   spec:
     nat-outgoing: true
 EOF
-docker network create --driver calico --ipam-driver calico-ipam --subnet 10.213.0.0/16 etest
+docker network create --driver calico --ipam-driver calico-ipam --subnet ${NETPOOL} ${NETNAME}

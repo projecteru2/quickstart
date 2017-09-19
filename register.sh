@@ -11,15 +11,16 @@ fi
 
 # cpu pod will create more containers
 export POD_FAVOR="CPU"
-export CPU="{\"0\":10,\"1\":10}"
+export CPU="{\"0\":100,\"1\":100}"
 export MEMORY="536870912"
 export IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
 
-etcdctl set /eru-core/pod/test/info "{\"name\":\"test\",\"desc\":\"lambda testing\",\"favor\":\"${POD_FAVOR}\"}"
-etcdctl set /eru-core/pod/test/node/${HOSTNAME}/info "{\"name\":\"${HOSTNAME}\",\"endpoint\":\"tcp://${IP}:2376\",\"podname\":\"test\",\"public\":false,\"available\":true,\"cpu\":${CPU},\"memcap\":${MEMORY}}"
+# for testing, we assume pod use CPU favor
+etcdctl set /eru-core/pod/eru/info "{\"name\":\"eru\",\"desc\":\"eru pod\",\"favor\":\"${POD_FAVOR}\"}"
+etcdctl set /eru-core/pod/eru/node/${HOSTNAME}/info "{\"name\":\"${HOSTNAME}\",\"endpoint\":\"tcp://${IP}:2376\",\"podname\":\"eru\",\"public\":false,\"available\":true,\"cpu\":${CPU},\"memcap\":${MEMORY}}"
 CAPEM=`cat /etc/docker/tls/ca.crt`
 KEYPEM=`cat /etc/docker/tls/client.key`
 CERTPEM=`cat /etc/docker/tls/client.crt`
-etcdctl set -- /eru-core/pod/test/node/${HOSTNAME}/ca.pem "${CAPEM}"
-etcdctl set -- /eru-core/pod/test/node/${HOSTNAME}/key.pem "${KEYPEM}"
-etcdctl set -- /eru-core/pod/test/node/${HOSTNAME}/cert.pem "${CERTPEM}"
+etcdctl set -- /eru-core/pod/eru/node/${HOSTNAME}/ca.pem "${CAPEM}"
+etcdctl set -- /eru-core/pod/eru/node/${HOSTNAME}/key.pem "${KEYPEM}"
+etcdctl set -- /eru-core/pod/eru/node/${HOSTNAME}/cert.pem "${CERTPEM}"

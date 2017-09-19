@@ -14,4 +14,4 @@ rm -rf /etc/eru
 # etcd
 systemctl stop etcd
 rm -rf /var/lib/etcd
-yum remove -y etcd
+yum remove -y etcd docker-ce

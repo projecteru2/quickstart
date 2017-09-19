@@ -8,12 +8,12 @@ fi
 # lambda
 echo 'servers:
   - 127.0.0.1:5001
-concurrency: 15
+concurrency: 150
 default:
-  adminpod: "test"
+  adminpod: "eru"
   adminvolumes:
     - "/tmp:/tmp/host"
-  pod: "test"
+  pod: "eru"
   image: "alpine:3.6"
   network: "etest"
   working_dir: "/tmp"
@@ -22,8 +22,9 @@ default:
   timeout: 15
   openstdin: false
 ' > /etc/eru/lambda.yaml
-docker run -it --rm -e IN_DOCKER=1 \
-  --name eru-lambda --net host \
+docker run -it --rm \
+  --name eru-lambda \
+  --net host \
   -v /etc/eru:/etc/eru \
   projecteru2/lambda \
-  /usr/bin/eru-lambda --name test --command date --raw
+  /usr/bin/eru-lambda --name date --command date --cpu 0.01 --count 10 --raw

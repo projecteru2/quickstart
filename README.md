@@ -19,7 +19,7 @@ And, this project was full tested under CentOS 7. If you used another OS, maybe 
 * register.sh register pod and node.
 * agent.sh run agent on node. run agent in container.
 * core.sh run core in container.
-* lambda.sh test a lambda command.
+* lambda.sh run lambda commands.
 
 * clean.sh reset server.
 

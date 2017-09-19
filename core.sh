@@ -8,8 +8,8 @@ fi
 # Core
 export BIND=":5001"
 export STATSD="127.0.0.1:8125"
-export ZONE="eru-test"
-export SHARES="10"
+export ZONE="eru"
+export SHARES="100"
 
 mkdir -p /etc/eru
 echo "log_level: \"DEBUG\"
@@ -40,7 +40,7 @@ docker:
     cert_path: \"/tmp\"
     hub: \"hub.docker.com\"
     hub_prefix: \"projecteru2\"
-    build_pod: \"test\"
+    build_pod: \"eru\"
     local_dns: true
 
 scheduler:

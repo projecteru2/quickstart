@@ -14,7 +14,7 @@ default:
   adminvolumes:
     - "/tmp:/tmp/host"
   pod: "eru"
-  image: "alpine:3.6"
+  image: "projecteru2/footstone:run-lambda"
   network: "etest"
   working_dir: "/tmp"
   cpu: 1.0
@@ -27,4 +27,4 @@ docker run -it --rm \
   --net host \
   -v /etc/eru:/etc/eru \
   projecteru2/lambda \
-  /usr/bin/eru-lambda --name date --command date --cpu 0.01 --count 10 --raw
+  /usr/bin/eru-lambda --name date --command date --cpu 0.01 --count 10

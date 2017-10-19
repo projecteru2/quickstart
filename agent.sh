@@ -12,12 +12,12 @@ export APILISTEN="127.0.0.1:12345"
 
 mkdir -p /etc/eru
 echo "pid: /tmp/agent.pid
+health_check_interval: 5
+health_check_timeout: 10
+core: 127.0.0.1:5001
+
 docker:
   endpoint: unix:///var/run/docker.sock
-etcd:
-  prefix: agent
-  etcd:
-    - http://127.0.0.1:2379
 metrics:
   step: 30
   transfers:
@@ -29,13 +29,10 @@ log:
     - ${LOGS}
   stdout: False
 " > /etc/eru/agent.yaml
-docker run -d --privileged \
-  --name eru_agent_$HOSTNAME \
-  --net host \
-  --restart always \
-  -v /sys/fs/cgroup/:/sys/fs/cgroup/ \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /proc/:/hostProc/ \
-  -v /etc/eru:/etc/eru \
-  projecteru2/agent \
-  /usr/bin/eru-agent
+
+docker run -it --rm \
+    --net host \
+    projecteru2/cli \
+    erucli container deploy --pod eru --entry agent \
+    --network host --image projecteru2/agent \
+    --cpu 0.05 https://goo.gl/3K3GHb

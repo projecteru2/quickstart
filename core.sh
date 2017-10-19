@@ -14,10 +14,8 @@ export SHARES="100"
 mkdir -p /etc/eru
 echo "log_level: \"DEBUG\"
 bind: \"${BIND}\"
-appdir: \"/home\"
 backupdir: \"/tmp/backup\"
 statsd: \"${STATSD}\"
-zone: \"${ZONE}\"
 image_cache: 2
 global_timeout: 300
 lock_timeout: 30

@@ -24,9 +24,12 @@ systemctl start docker
 # prepare a pod with a node
 ./register.sh
 
+# get eru cli
+docker pull projecteru2/cli
+
 # eru
-./agent.sh
 ./core.sh
+./agent.sh
 
 # run lambda test
 ./lambda.sh

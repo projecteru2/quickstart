@@ -9,5 +9,5 @@ fi
 docker run -it --rm \
   --net host \
   projecteru2/cli \
-  cli lambda \
-  --name data --pod eru --cpu 0.01 --count 10 data
+  erucli lambda \
+  --name data --pod eru --cpu 0.01 --count 10 date

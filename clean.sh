@@ -13,4 +13,4 @@ rm -rf /etc/eru
 
 # etcd
 systemctl stop etcd
-rm -rf /var/lib/etcd/.*
+rm -rf /var/lib/etcd/default.etcd

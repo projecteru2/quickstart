@@ -19,10 +19,10 @@ export PODNAME="eru"
 # for testing, we assume pod use CPU favor
 etcdctl set /eru-core/pod/${PODNAME}/info "{\"name\":\"eru\",\"desc\":\"eru pod\",\"favor\":\"${POD_FAVOR}\"}"
 etcdctl set /eru-core/pod/${PODNAME}/node/${HOSTNAME}/info "{\"name\":\"${HOSTNAME}\",\"endpoint\":\"tcp://${IP}:2376\",\"podname\":\"eru\",\"public\":false,\"available\":true,\"cpu\":${CPU},\"memcap\":${MEMORY}}"
+etcdctl set /eru-core/node/${HOSTNAME} ${PODNAME}
 CAPEM=`cat /etc/docker/tls/ca.crt`
 KEYPEM=`cat /etc/docker/tls/client.key`
 CERTPEM=`cat /etc/docker/tls/client.crt`
 etcdctl set -- /eru-core/pod/${PODNAME}/node/${HOSTNAME}/ca.pem "${CAPEM}"
 etcdctl set -- /eru-core/pod/${PODNAME}/node/${HOSTNAME}/key.pem "${KEYPEM}"
 etcdctl set -- /eru-core/pod/${PODNAME}/node/${HOSTNAME}/cert.pem "${CERTPEM}"
-

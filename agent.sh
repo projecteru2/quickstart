@@ -29,10 +29,30 @@ log:
     - ${LOGS}
   stdout: False
 " > /etc/eru/agent.yaml
+echo '
+appname: "eru"
+entrypoints:
+  agent:
+    cmd: "/usr/bin/eru-agent"
+    restart: always
+    publish:
+      - "12345"
+    healthcheck:
+      ports:
+        - "12345/tcp"
+    privileged: true
+    log_config: "journald"
+volumes:
+  - "/etc/eru:/etc/eru"
+  - "/sys/fs/cgroup/:/sys/fs/cgroup/"
+  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "/proc/:/hostProc/"
+' > /tmp/spec.yaml
 
 docker run -it --rm \
     --net host \
+    -v /tmp/spec.yaml:/tmp/spec.yaml \
     projecteru2/cli \
     erucli container deploy --pod eru --entry agent \
     --network host --image projecteru2/agent \
-    --cpu 0.05 https://goo.gl/3K3GHb
+    --cpu 0.05 /tmp/spec.yaml

@@ -3,33 +3,52 @@
 # Usage: deploy eru-core, eru-agent in one node
 #        and run eru-lambda for example
 
+set -e
+
 # yum
-./yum.sh
+echo "Updating..."
+source yum.sh
+echo "Update OK"
 
 # docker
-./docker.sh
+echo "Install Docker"
+doker version &>/dev/null || source docker.sh
+echo "Docker OK"
 
 # etcd
-./etcd.sh
+echo "Install Etcd"
+sysctl status etcd || source etcd.sh
+echo "Etcd OK"
 
 # start etcd then start docker
 systemctl enable etcd
 systemctl start etcd
 systemctl enable docker
 systemctl start docker
+echo "Enable etcd and docker... OK"
 
 # calico
-./calico.sh
+echo "Deploy Calico network"
+docker ps | grep calico &> /dev/null || source calico.sh
+echo "Calico network OK"
 
 # prepare a pod with a node
-./register.sh
-
+echo "Preparing..."
+source register.sh
+echo "Register OK"
 # get eru cli
 docker pull projecteru2/cli
+echo "ERU_Cli OK"
 
 # eru
-./core.sh
-./agent.sh
+docker ps | grep eru_core &> /dev/null || source core.sh
+echo "Core OK"
+docker ps | grep eru_agen &> /dev/null || source agent.sh
+echo "Agent OK"
 
 # run lambda test
-./lambda.sh
+echo "Let's run a lambda for testing"
+read -p "Are you ready?[Y/n]" Y
+[[ "$Y" == "Y" || "$Y" == "y" || "$Y" == "" ]] && source lambda.sh || echo "That's fine"
+
+echo "Done"

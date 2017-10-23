@@ -22,3 +22,4 @@ cat << EOF | calicoctl create -f -
     nat-outgoing: true
 EOF
 docker network create --driver calico --ipam-driver calico-ipam --subnet ${NETPOOL} ${NETNAME}
+sysctl -w net.ipv4.ip_forward=1

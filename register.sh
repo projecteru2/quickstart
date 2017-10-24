@@ -16,4 +16,4 @@ docker run -it --rm --privileged \
   --net host \
   -v /etc/docker/tls:/etc/docker/tls \
   projecteru2/cli \
-  erucli node add
+  erucli node add eru

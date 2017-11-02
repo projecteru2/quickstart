@@ -35,7 +35,7 @@ git:
 docker:
     log_driver: \"json-file\"
     network_mode: \"bridge\"
-    cert_path: \"/tmp\"
+    cert_path: \"/etc/docker/tls\"
     hub: \"hub.docker.com\"
     hub_prefix: \"projecteru2\"
     build_pod: \"eru\"

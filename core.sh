@@ -37,7 +37,7 @@ docker:
     network_mode: \"bridge\"
     cert_path: \"/tmp\"
     hub: \"hub.docker.com\"
-    hub_prefix: \"projecteru2\"
+    namespace: \"projecteru2\"
     build_pod: \"eru\"
     local_dns: true
 

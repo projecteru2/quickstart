@@ -8,7 +8,7 @@ fi
 # etcd
 yum install -y etcd
 # update to 3.2.6+
-export ETCD_VER=v3.2.7
+export ETCD_VER=v3.2.18
 export DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download
 
 curl -L ${DOWNLOAD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz

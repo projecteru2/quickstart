@@ -12,7 +12,7 @@ export NETNAME="etest"
 curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl
 chmod +x /usr/bin/calicoctl
 docker pull calico/node
-calicoctl node run --node-image=calico/node
+ETCD_ENDPOINTS=http://127.0.0.1:2379 calicoctl node run --node-image=calico/node
 cat << EOF | calicoctl create -f -
 - apiVersion: v1
   kind: ipPool

@@ -6,7 +6,7 @@ if [[ `whoami` != "root" ]];then
 fi
 
 # calico
-export CALICOCTL_VER=v3.1.0
+export CALICOCTL_VER=v1.6.1
 export NETPOOL=10.213.0.0/16
 export NETNAME="etest"
 curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl

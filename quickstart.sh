@@ -10,6 +10,9 @@ echo "Updating..."
 source yum.sh
 echo "Update OK"
 
+# global env
+export ERU_ETCD="127.0.0.1:2379"
+
 # docker
 echo "Install Docker"
 doker version &>/dev/null || source docker.sh

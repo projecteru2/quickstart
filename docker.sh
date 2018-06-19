@@ -18,9 +18,7 @@ echo "{
     \"tlscacert\": \"/etc/docker/tls/ca.crt\",
     \"tlscert\": \"/etc/docker/tls/server.crt\",
     \"tlskey\": \"/etc/docker/tls/server.key\",
-    \"cluster-store\": \"etcd://127.0.0.1:2379\",
-    \"dns\": [\"114.114.114.114\"],
-    \"registry-mirrors\": [\"https://registry.docker-cn.com\"]
+    \"cluster-store\": \"etcd://${ERU_ETCD}\"
 }" > /etc/docker/daemon.json
 openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 3650 -subj /C=CN
 openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj /CN=${IP}

@@ -35,7 +35,7 @@ EOF
 # prepare docker plugin
 mkdir -p /etc/eru
 echo "ETCD_ENDPOINTS=http://${ERU_ETCD}" > /etc/eru/minions.conf
-rpm -i https://12-137714834-gh.circle-artifacts.com/0/RPM/eru-minions-0.1-1.el7.x86_64.rpm
+rpm -i https://13-137714834-gh.circle-artifacts.com/0/RPM/eru-minions-0.1-1.el7.x86_64.rpm
 systemctl enable eru-minions
 systemctl start eru-minions
 

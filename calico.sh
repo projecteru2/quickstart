@@ -9,7 +9,7 @@ fi
 export CALICOCTL_VER=v3.1.3
 export NETPOOL=10.213.0.0/16
 export NETNAME="etest"
-curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl
+ls /usr/bin | grep calicoctl &> /dev/null || curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl
 chmod +x /usr/bin/calicoctl
 
 mkdir -p /etc/calico
@@ -40,5 +40,6 @@ systemctl enable eru-minions
 systemctl start eru-minions
 
 docker network create --driver calico --ipam-driver calico-ipam --subnet ${NETPOOL} ${NETNAME}
-sysctl -w net.ipv4.ip_forward=1
-sysctl -w net.netfilter.nf_conntrack_max=1000000
+echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
+echo 'net.netfilter.nf_conntrack_max=1000000' >> /etc/sysctl.conf
+sysctl -p

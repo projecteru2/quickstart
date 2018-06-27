@@ -14,7 +14,6 @@ export SHARES="100"
 mkdir -p /etc/eru
 echo "log_level: \"DEBUG\"
 bind: \"${BIND}\"
-backupdir: \"/tmp/backup\"
 statsd: \"${STATSD}\"
 image_cache: 2
 global_timeout: 300
@@ -56,6 +55,5 @@ docker run -d \
   --net host \
   --restart always \
   -v /etc/eru:/etc/eru \
-  -v /tmp/backup:/tmp/backup \
   projecteru2/core \
   /usr/bin/eru-core

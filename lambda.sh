@@ -10,4 +10,4 @@ docker run -it --rm \
   --net host \
   projecteru2/cli \
   eru-cli lambda \
-  --name date --pod eru --cpu 0.01 --count 10 date
+  --name date --pod eru --mem 10485760 --cpu 0.01 --count 10 date

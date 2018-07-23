@@ -55,4 +55,4 @@ docker run -it --rm \
     projecteru2/cli \
     eru-cli container deploy --pod eru --entry agent \
     --network host --image projecteru2/agent \
-    --cpu 0.05 /tmp/spec.yaml
+    --cpu 0.05 --mem 104857600 /tmp/spec.yaml

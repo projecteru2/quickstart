@@ -53,6 +53,6 @@ docker run -it --rm \
     --net host \
     -v /tmp/spec.yaml:/tmp/spec.yaml \
     projecteru2/cli \
-    erucli container deploy --pod eru --entry agent \
+    eru-cli container deploy --pod eru --entry agent \
     --network host --image projecteru2/agent \
     --cpu 0.05 /tmp/spec.yaml

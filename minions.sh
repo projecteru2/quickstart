@@ -6,7 +6,7 @@ if [[ `whoami` != "root" ]];then
 fi
 
 export NETPOOL=10.213.0.0/16
-export NETNAME="etest"<Paste>
+export NETNAME="etest"
 
 echo '
 appname: "eru"
@@ -26,6 +26,6 @@ docker run -it --rm \
     projecteru2/cli \
     eru-cli container deploy --pod eru --entry minions \
     --network host --image projecteru2/minions \
-    --cpu 0.05 --env ETCD_ENDPOINTS=http://${ERU_ETCD} /tmp/spec.yaml
+    --cpu 0.05 --mem 104857600 --env ETCD_ENDPOINTS=http://${ERU_ETCD} /tmp/spec.yaml
 
 docker network create --driver calico --ipam-driver calico-ipam --subnet ${NETPOOL} ${NETNAME}

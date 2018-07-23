@@ -9,11 +9,11 @@ fi
 docker run -it --rm \
   --net host \
   projecteru2/cli \
-  erucli pod add --favor CPU eru
+  eru-cli pod add --favor CPU eru
 
 # register a node
 docker run -it --rm --privileged \
   --net host \
   -v /etc/docker/tls:/etc/docker/tls \
   projecteru2/cli \
-  erucli node add eru
+  eru-cli node add eru

@@ -51,6 +51,10 @@ echo "Register OK"
 docker ps | grep eru_agent &> /dev/null || source agent.sh
 echo "Agent OK"
 
+# eru minions
+docker ps | grep eru_minions &> /dev/null || source minions.sh
+echo "Minions OK"
+
 # run lambda test
 echo "Let's run a lambda for testing"
 read -p "Are you ready?[Y/n]" Y

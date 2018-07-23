@@ -8,7 +8,7 @@ fi
 # calico
 export CALICOCTL_VER=v3.1.3
 export NETPOOL=10.213.0.0/16
-export NETNAME="etest"
+
 ls /usr/bin | grep calicoctl &> /dev/null || curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl
 chmod +x /usr/bin/calicoctl
 
@@ -32,14 +32,6 @@ cat << EOF | calicoctl create -f -
     cidr: ${NETPOOL}
 EOF
 
-# prepare docker plugin
-mkdir -p /etc/eru
-echo "ETCD_ENDPOINTS=http://${ERU_ETCD}" > /etc/eru/minions.conf
-rpm -i https://13-137714834-gh.circle-artifacts.com/0/RPM/eru-minions-0.1-1.el7.x86_64.rpm
-systemctl enable eru-minions
-systemctl start eru-minions
-
-docker network create --driver calico --ipam-driver calico-ipam --subnet ${NETPOOL} ${NETNAME}
 echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
 echo 'net.netfilter.nf_conntrack_max=1000000' >> /etc/sysctl.conf
 sysctl -p

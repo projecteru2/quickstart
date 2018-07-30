@@ -7,5 +7,5 @@ fi
 
 # yum
 yum update -y
-yum install -y epel-release yum-utils device-mapper-persistent-data lvm2
+yum install -y epel-release yum-utils device-mapper-persistent-data lvm2 openssl
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo

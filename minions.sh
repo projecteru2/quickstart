@@ -14,7 +14,6 @@ entrypoints:
   minions:
     cmd: "/usr/bin/eru-minions"
     restart: "always"
-    log_config: "journald"
     privileged: true
 volumes:
   - "/var/run/docker/plugins/:/var/run/docker/plugins"

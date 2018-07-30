@@ -32,7 +32,10 @@ git:
     scm_type: \"github\"
 
 docker:
-    log_driver: \"json-file\"
+    log:
+      type: \"json-file\"
+      config:
+        \"max-size\": \"10m\"
     network_mode: \"bridge\"
     cert_path: \"/tmp\"
     hub: \"hub.docker.com\"
@@ -44,11 +47,6 @@ scheduler:
     maxshare: -1
     sharebase: ${SHARES}
 
-# for debug
-syslog:
-    address: \"udp://localhost:5111\"
-    facility: \"daemon\"
-    format: \"rfc5424\"
 " > /etc/eru/core.yaml
 docker run -d \
   --name eru_core_$HOSTNAME \

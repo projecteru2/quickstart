@@ -41,7 +41,6 @@ entrypoints:
       ports:
         - "12345/tcp"
     privileged: true
-    log_config: "journald"
 volumes:
   - "/etc/eru:/etc/eru"
   - "/sys/fs/cgroup/:/sys/fs/cgroup/"

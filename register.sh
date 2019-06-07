@@ -9,7 +9,7 @@ fi
 docker run -it --rm \
   --net host \
   projecteru2/cli \
-  eru-cli pod add --favor CPU eru
+  eru-cli pod add eru
 
 # register a node
 docker run -it --rm --privileged \

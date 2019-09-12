@@ -13,6 +13,6 @@ docker run -it --rm \
     projecteru2/cli \
     eru-cli container deploy --pod eru --entry minions \
     --network host --image projecteru2/minions \
-    --cpu 0.05 --mem 104857600 --env ETCD_ENDPOINTS=http://${ERU_ETCD} https://goo.gl/P6AH7x
+    --cpu 0.05 --memory 104857600 --env ETCD_ENDPOINTS=http://${ERU_ETCD} https://goo.gl/P6AH7x
 
 docker network create --driver calico --ipam-driver calico-ipam --subnet ${NETPOOL} ${NETNAME}

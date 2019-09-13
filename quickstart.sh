@@ -12,6 +12,9 @@ echo "Update OK"
 
 # global env
 export ERU_ETCD="127.0.0.1:2379"
+export ERU_CORE="127.0.0.1:5001"
+export NODE_CPU=$(grep processor /proc/cpuinfo -c)
+export NODE_MEMORY="$(awk '/MemTotal/ {print $2}' /proc/meminfo)"000
 
 # etcd
 echo "Install Etcd"

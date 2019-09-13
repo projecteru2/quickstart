@@ -1,5 +1,5 @@
 set -u
-: "$ERU_ETCD" "$ERU_CORE"
+: "$ERU_ETCD" "$ERU_CORE" "$NODE_CPU" "$NODE_MEMORY"
 
 . yum.sh
 

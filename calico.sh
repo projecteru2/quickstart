@@ -8,6 +8,7 @@ fi
 # calico
 export CALICOCTL_VER=v3.4.0
 export CALICO_NODE=v3.4
+export NETPOOL=10.213.0.0/16
 
 ls /usr/bin | grep calicoctl &> /dev/null || curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl
 chmod +x /usr/bin/calicoctl

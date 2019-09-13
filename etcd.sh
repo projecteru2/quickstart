@@ -7,6 +7,9 @@ fi
 
 # etcd
 yum install -y etcd
+sed -i '/ETCD_LISTEN_CLIENT_URLS/s/localhost/0.0.0.0/' /etc/etcd/etcd.conf
+systemctl enable etcd
+systemctl restart etcd
 # update to 3.2.6+
 #export ETCD_VER=v3.2.18
 #export DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download

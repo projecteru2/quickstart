@@ -16,4 +16,4 @@ docker run -it --rm --privileged \
   --net host \
   -v /etc/docker/tls:/etc/docker/tls \
   projecteru2/cli \
-  eru-cli --eru $ERU_CORE node add --cpu 1 --memory 1073741824 eru
+  eru-cli --eru $ERU_CORE node add --cpu $NODE_CPU --memory $NODE_MEMORY eru

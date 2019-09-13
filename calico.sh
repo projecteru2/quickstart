@@ -6,8 +6,8 @@ if [[ `whoami` != "root" ]];then
 fi
 
 # calico
-export CALICOCTL_VER=v3.1.3
-export NETPOOL=10.213.0.0/16
+export CALICOCTL_VER=v3.4.0
+export CALICO_NODE=v3.4
 
 ls /usr/bin | grep calicoctl &> /dev/null || curl -L https://github.com/projectcalico/calicoctl/releases/download/${CALICOCTL_VER}/calicoctl -o /usr/bin/calicoctl
 chmod +x /usr/bin/calicoctl
@@ -21,7 +21,7 @@ spec:
   etcdEndpoints: "http://${ERU_ETCD}"
 " > /etc/calico/calicoctl.cfg
 
-calicoctl node run --node-image=calico/node
+calicoctl node run --node-image="calico/node:release-${CALICO_NODE}" --disable-docker-networking
 cat << EOF | calicoctl create -f -
 - apiVersion: projectcalico.org/v3
   kind: IPPool

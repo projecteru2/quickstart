@@ -11,7 +11,7 @@ export NETNAME="calico"
 docker run -it --rm \
     --net host \
     projecteru2/cli \
-    eru-cli --eru $ERU_CORE container deploy --pod eru --entry minions \
+    eru-cli --eru $ERU_CORE container deploy --pod eru --node $(hostname) --entry minions \
     --network host --image projecteru2/minions \
     --cpu 0.05 --memory 104857600 --env ETCD_ENDPOINTS=http://${ERU_ETCD} https://goo.gl/P6AH7x
 

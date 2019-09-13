@@ -20,7 +20,7 @@ echo "{
     \"tlskey\": \"/etc/docker/tls/server.key\",
     \"cluster-store\": \"etcd://${ERU_ETCD}\"
 }" > /etc/docker/daemon.json
-sed 's/-H fd:\/\///' /usr/lib/systemd/system/docker.service
+sed -i 's/-H fd:\/\///' /usr/lib/systemd/system/docker.service
 systemctl daemon-reload
 openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 3650 -subj /C=CN
 openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj /CN=${IP}
@@ -30,3 +30,5 @@ openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -in client.csr -out c
 chmod 600 ca.key client.key server.key
 rm -rf server.csr client.csr
 mv ca.* client.* server.* /etc/docker/tls
+systemctl enable docker
+systemctl start docker

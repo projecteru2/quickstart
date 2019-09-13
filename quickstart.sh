@@ -13,22 +13,15 @@ echo "Update OK"
 # global env
 export ERU_ETCD="127.0.0.1:2379"
 
-# docker
-echo "Install Docker"
-doker version &>/dev/null || source docker.sh
-echo "Docker OK"
-
 # etcd
 echo "Install Etcd"
 sysctl status etcd || source etcd.sh
 echo "Etcd OK"
 
-# start etcd then start docker
-systemctl enable etcd
-systemctl start etcd
-systemctl enable docker
-systemctl start docker
-echo "Enable etcd and docker... OK"
+# docker
+echo "Install Docker"
+doker version &>/dev/null || source docker.sh
+echo "Docker OK"
 
 # calico
 echo "Deploy Calico network"

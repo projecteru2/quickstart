@@ -34,7 +34,7 @@ docker run -it --rm \
     --net host \
     -v /tmp/agent.yaml:/tmp/agent.yaml \
     projecteru2/cli \
-    eru-cli container deploy --pod eru --entry agent \
+    eru-cli --eru $ERU_CORE container deploy --pod eru --entry agent \
     --file /tmp/agent.yaml:/agent.yaml \
     --network host --image projecteru2/agent \
     --cpu 0.05 --memory 104857600 https://goo.gl/3K3GHb

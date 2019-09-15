@@ -16,3 +16,5 @@ docker run -it --rm \
     --cpu 0.05 --memory 104857600 --env ETCD_ENDPOINTS=http://${ERU_ETCD} https://goo.gl/P6AH7x
 
 docker network create --driver calico --ipam-driver calico-ipam --subnet ${NETPOOL} ${NETNAME}
+echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6

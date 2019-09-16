@@ -3,24 +3,56 @@ QuickStart
 
 Launch a Eru core and agent, run lambda script on it.
 
-### Run
+### Requirements
 
-```./quickstart.sh```
+* CentOS 7 with kernel version supporting Docker (>2.6)
+* all nodes MUST have distinguished hostname
+* iptables MUST be prepared to ensure communication over layer 3 and layer 4
 
-Noted, we use [docker mirror for china](https://www.docker-cn.com/registry-mirror) for acceleration.
-And, this project was full tested under CentOS 7. If you used another OS, maybe it will not work.
+### Run Standalone Node
 
-### How it works
+```
+bash quickstart.sh
+```
 
-* yum.sh make system updated.
-* etcd.sh install etcd and update it to 3.2.X.
-* docker.sh install docker, and configure it.
-* calico.sh run calico node, create a SDN network and register in docker.
-* register.sh register pod and node.
-* agent.sh run agent on node. run agent in container.
-* core.sh run core in container.
-* lambda.sh run lambda commands.
+### Add Agent Nodes
 
-* clean.sh reset server.
+Assume standalone node has IP address `$CORE_IP`:
 
+```
+export ERU_ETCD=$CORE_IP:2379 ERU_CORE=$CORE_IP:5001 NODE_CPU=1 NODE_MEMORY=498916000
+bash add_node.sh
+```
 
+`NODE_CPU` and `NODE_MEMORY` is to be adjusted on node capacity, and `NODE_MEMORY` is calculated on bytes.
+
+### Usage
+
+Let's say we want to run 3 redis server on 3 nodes.
+
+Step 1: compose yaml spec for deploy
+
+```
+cat > /tmp/spec.yaml <<!
+appname: redis
+entrypoints:
+  singular:
+    cmd: '--appendonly yes'
+    publish:
+      - 6379
+!
+```
+
+Step 2: use eru-cli to deploy
+
+```
+eru-cli container deploy --pod eru --entry singular --image redis --network host --count 1 --deploy-method fill --nodes-limit 3  --memory 10M /tmp/spec.yaml
+```
+
+* `--pod` indicates node group on which you want to deploy;
+* `--entry` indicates entrypoint written in spec to deploy;
+* `--image` indicates docker image to pull and run with;
+* `--count 1 --deploy-method fill --node-limit 3` indicates to carry deployment on 3 nodes;
+* `--memory` indicates memory limit for each container;
+
+more info see https://book.eru.sh/

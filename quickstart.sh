@@ -54,6 +54,6 @@ echo "Minions OK"
 # run lambda test
 echo "Let's run a lambda for testing"
 read -p "Are you ready?[Y/n]" Y
-[[ "$Y" == "Y" || "$Y" == "y" || "$Y" == "" ]] && source lambda.sh || echo "That's fine"
+[[ "$Y" == "Y" || "$Y" == "y" || "$Y" == "" ]] && source lambda.sh && echo "That's fine"
 
 echo "Done"

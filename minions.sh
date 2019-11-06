@@ -6,7 +6,7 @@ if [[ `whoami` != "root" ]];then
 fi
 
 export NETPOOL=10.213.0.0/16
-export NETNAME="calico"
+export NETNAME="testpool"
 
 docker run -it --rm \
     --net host \

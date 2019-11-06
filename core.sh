@@ -16,7 +16,7 @@ echo "log_level: \"DEBUG\"
 bind: \"${BIND}\"
 statsd: \"${STATSD}\"
 image_cache: 2
-global_timeout: 300
+global_timeout: 300s
 lock_timeout: 30
 
 etcd:

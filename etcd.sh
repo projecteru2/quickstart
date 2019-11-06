@@ -1,21 +1,46 @@
-#!/bin/bash
+#!/bin/bash -eu
+
+. env.sh
 
 # root
 if [[ `whoami` != "root" ]];then
   echo "root permission required"
 fi
 
-# etcd
-yum install -y etcd
-sed -i '/ETCD_LISTEN_CLIENT_URLS/s/localhost/0.0.0.0/' /etc/etcd/etcd.conf
-systemctl enable etcd
-systemctl restart etcd
-# update to 3.2.6+
-#export ETCD_VER=v3.2.18
-#export DOWNLOAD_URL=https://github.com/coreos/etcd/releases/download
+dist=`./dist.sh`
 
-#curl -L ${DOWNLOAD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
-#mkdir -p /tmp/etcd
-#tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd --strip-components=1
-#mv /tmp/etcd/etcd /usr/bin/etcd
-#mv /tmp/etcd/etcdctl /usr/bin/etcdctl
+if [[ $dist == "centos" ]]; then
+  echo "Install ETCD on CentOS"
+  yum install -y etcd
+
+  env_file="/etc/etcd/etcd.conf"
+  mkdir -p /etc/etcd
+
+  unit_file="/usr/lib/systemd/system/etcd.service"
+
+elif [[ $dist == "ubuntu" ]]; then
+  echo "Install ETCD on Ubuntu"
+  apt install -y etcd
+
+  env_file="/etc/default/etcd"
+  mkdir -p /etc/default
+
+  unit_file="/lib/systemd/system/etcd.service"
+
+else
+  echo "unsupport dist: ${dist}"
+  exit -1
+fi
+
+cat <<EOF >${env_file}
+ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"
+ETCD_ADVERTISE_CLIENT_URLS="http://0.0.0.0:2379"
+EOF
+
+sed -i 's/ExecStart=.*$/ExecStart=\/usr\/bin\/etcd/g' $unit_file
+
+systemctl enable etcd
+systemctl daemon-reload
+systemctl restart etcd
+
+echo "ETCD installing OK"

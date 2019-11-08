@@ -17,7 +17,7 @@ docker run -it --rm \
   projecteru2/cli \
   eru-cli --eru $ERU_CORE container deploy \
     --pod ${ERU_POD} \
-    --node $(hostname) \
+    --node ${ERU_NODE} \
     --entry minions \
     --network host \
     --image projecteru2/minions \

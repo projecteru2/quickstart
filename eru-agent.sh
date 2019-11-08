@@ -47,6 +47,7 @@ docker run -it --rm \
     --image projecteru2/agent \
     --cpu 0.05 \
     --memory 104857600 \
+    --env="ERU_HOSTNAME=${ERU_NODE}" \
     https://raw.githubusercontent.com/projecteru2/agent/master/spec.yaml
 
 echo "ERU agent installing OK"

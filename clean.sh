@@ -3,6 +3,7 @@
 # root
 if [[ `whoami` != "root" ]];then
   echo "root permission required"
+  exit -1
 fi
 
 # docker

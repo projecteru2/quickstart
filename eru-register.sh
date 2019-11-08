@@ -32,7 +32,7 @@ docker run -it --rm --privileged \
     --memory $mem \
     --storage 1T \
     --endpoint tcp://127.0.0.1:2376 \
-    --nodename testnode \
+    --nodename $ERU_NODE \
     $ERU_POD
 
 echo "Register OK"

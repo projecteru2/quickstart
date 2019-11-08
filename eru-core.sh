@@ -48,7 +48,7 @@ EOF
 docker image pull projecteru2/core
 
 docker run -d \
-  --name eru_core_$(hostname) \
+  --name eru_core \
   --net host \
   --restart always \
   -v /etc/eru:/etc/eru \

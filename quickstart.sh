@@ -17,4 +17,9 @@ set -e
 ./eru-agent.sh
 ./eru-minions.sh
 
+export ZEROIMAGE=harbor.shopeemobile.com/cloud/zero:master
+./zero-common.sh
+./zero-nsqd.sh
+./zero-programs.sh
+
 echo all done

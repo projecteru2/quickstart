@@ -1,15 +1,13 @@
 #!/bin/bash -eu
 
-. env.sh
-
 # root
 if [[ `whoami` != "root" ]];then
   echo "root permission required"
   exit -1
 fi
 
-echo "Install ERU agnet"
+. env.sh
 
-./run-eru-agent.sh
+docker rm -f ${ERU_CORE_NAME} || echo
 
-echo "ERU agent installing OK"
+./run-eru-core.sh

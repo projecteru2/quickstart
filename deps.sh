@@ -17,7 +17,8 @@ if [[ $dist == "centos" ]]; then
   yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   source /etc/os-release
   yum-config-manager --add-repo https://copr.fedorainfracloud.org/coprs/ngompa/musl-libc/repo/epel-$REDHAT_SUPPORT_PRODUCT_VERSION/ngompa-musl-libc-epel-$REDHAT_SUPPORT_PRODUCT_VERSION.repo
-  yum makecache fast
+  yum makecache
+  yum install -y musl-libc-static
 
 elif [[ $dist == "ubuntu" ]]; then
   echo "Ubuntu updating..."

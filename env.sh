@@ -20,3 +20,6 @@ CALICOCTL_VER=v3.4.0
 CALICO_NODE=v3.4
 CALICO_POOL_CIDR=10.213.0.0/16
 CALICO_POOL_NAME=testpool
+
+IP=$(ip route get 1 | awk '{print $NF;exit}')
+

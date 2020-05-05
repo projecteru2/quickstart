@@ -18,7 +18,6 @@ cat <<EOF >/etc/eru/core.yaml
 log_level: DEBUG
 bind: "${ERU_BIND}"
 statsd: "${STATSD}"
-image_cache: 2
 global_timeout: 300s
 lock_timeout: 30s
 

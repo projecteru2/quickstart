@@ -12,9 +12,10 @@ dist=`./dist.sh`
 
 if [[ $dist == "centos" ]]; then
   echo "CentOS updating..."
-  yum update -y
-  yum install -y epel-release yum-utils device-mapper-persistent-data lvm2 openssl
   yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  yum-config-manager --add-repo https://copr.fedorainfracloud.org/coprs/ngompa/musl-libc/repo/epel-7/ngompa-musl-libc-epel-7.repo
+  yum update -y
+  yum install -y epel-release yum-utils device-mapper-persistent-data lvm2 openssl musl-libc-static
 
 elif [[ $dist == "ubuntu" ]]; then
   echo "Ubuntu updating..."

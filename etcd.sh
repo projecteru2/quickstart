@@ -34,7 +34,7 @@ else
 fi
 
 cat <<EOF >${env_file}
-ETCD_LISTEN_CLIENT_URLS="http://$IP:2379"
+ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"
 ETCD_ADVERTISE_CLIENT_URLS="http://$IP:2379"
 ETCD_ENABLE_V2="true"
 EOF

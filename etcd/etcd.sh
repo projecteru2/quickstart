@@ -33,10 +33,23 @@ else
   exit -1
 fi
 
+config_file=/etc/etcd/etcd.yaml
+mkdir -p ${config_file%/*}
+IFS=,; for netloc in $ETCD_NETLOC; do
+    IFS=':' read ipv4 _ <<<"$netloc"
+    ((i++))
+    name="etcd$i"
+    cluster+=("$name=http://$ipv4:2379")
+    if [[ "$i" == "${ETCD_IDX:=1}" ]] then
+        NAME=$name
+        IPV4=$ipv4
+    fi
+done
+INIT_CLUSTER=$(echo "${cluster[*]}")
+eval "cat <<< \"$(cat etcd.conf.tmpl)\"" > $config_file
+
 cat <<EOF >${env_file}
-ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"
-ETCD_ADVERTISE_CLIENT_URLS="http://$IP:2379"
-ETCD_ENABLE_V2="true"
+ETCD_CONFIG_FILE=$config_file
 EOF
 
 sed -i 's/ExecStart=.*$/ExecStart=\/usr\/bin\/etcd/g' $unit_file
@@ -45,4 +58,4 @@ systemctl enable etcd
 systemctl daemon-reload
 systemctl restart etcd
 
-echo "ETCD installing OK"
+lsof -i:2379 && echo "ETCD OK" || echo "ETCD failed"

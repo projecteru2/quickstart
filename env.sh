@@ -1,6 +1,8 @@
-ETCD="127.0.0.1:2379"
+ETCD="http://$ETCD0:2379,http://$ETCD1:2379,http://$ETCD2:2379"
 ETCD_VER="v3.4.4"
 ETCD_DOWNLOAD_URL="https://storage.googleapis.com/etcd"
+
+ETCD_NETLOC=$(sed 's!http://!!g' <<<$ETCD) # 10.0.0.1:2379,..
 
 STATSD="127.0.0.1:8125"
 

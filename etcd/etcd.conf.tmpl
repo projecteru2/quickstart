@@ -1,0 +1,17 @@
+# exmaple
+# $node: 10.0.0.1
+# $name: etcd0
+# $ETCD_INIT_CLUSTER: etcd0=http://10.0.0.1:2380
+
+name: $name
+data-dir: /data/etcd
+listen-peer-urls: http://0.0.0.0:2380
+listen-client-urls: http://0.0.0.0:2379
+initial-advertise-peer-urls: http://$node:2380
+advertise-client-urls: http://$node:2379
+initial-cluster: $ETCD_INIT_CLUSTER
+initial-cluster-token: eru
+initial-cluster-state: new
+
+auto-compaction-retention: "1"
+quota-backend-bytes: -1

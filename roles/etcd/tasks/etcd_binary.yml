@@ -1,0 +1,23 @@
+- name: download etcd release
+  uri:
+    url: https://storage.googleapis.com/etcd/{{ etcd_version }}/{{ etcd_basename }}.tar.gz
+    dest: /tmp/
+    status_code:
+      - 200
+      - 304
+
+- name: extract etcd release
+  unarchive:
+    src: /tmp/{{ etcd_basename }}.tar.gz
+    remote_src: yes
+    dest: /tmp/
+
+- name: cp binaries under $PATH
+  copy:
+    src: /tmp/{{ etcd_basename }}/{{ item }}
+    remote_src: true
+    dest: /usr/bin/{{ item }}
+    mode: '0755'
+  with_items:
+    - etcd
+    - etcdctl

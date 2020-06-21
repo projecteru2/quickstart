@@ -1,0 +1,7 @@
+packages:
+  - epel-release
+  - yum-utils
+  - device-mapper-persistent-data
+  - lvm2
+  - openssl
+  - musl-libc-static

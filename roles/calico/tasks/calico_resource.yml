@@ -1,0 +1,25 @@
+- name: render calico resource yaml
+  template:
+    src: "{{ item }}.yml.j2"
+    dest: /tmp/{{ item }}.yml
+  loop:
+    - ippool
+    - profile
+
+- name: try fetch ippool
+  shell: calicoctl get -f /tmp/ippool.yml
+  register: fetch_ippool_res
+  ignore_errors: yes
+
+- name: create calico ippool
+  shell: calicoctl create -f /tmp/ippool.yml
+  when: fetch_ippool_res.rc != 0
+
+- name: try fetch profile
+  shell: calicoctl get -f /tmp/profile.yml
+  register: fetch_profile_res
+  ignore_errors: yes
+
+- name: create calico profile
+  shell: calicoctl create -f /tmp/profile.yml
+  when: fetch_profile_res.rc != 0

@@ -1,0 +1,19 @@
+- include: calico_kernel.yml
+  tags:
+    - calico_kernel
+
+- include: calico_binary.yml
+  tags:
+    - calico_binary
+
+- include: calico_config.yml
+  tags:
+    - calico_config
+
+- include: calico_launch.yml
+  tags:
+    - calico_launch
+
+- include: calico_resource.yml
+  tags:
+    - calico_resource

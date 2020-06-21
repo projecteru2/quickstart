@@ -1,0 +1,13 @@
+apiVersion: projectcalico.org/v3
+kind: Profile
+metadata:
+  name: {{ calico_ippool_name }}
+spec:
+  egress:
+  - action: Allow
+    destination: {}
+    source: {}
+  ingress:
+  - action: Allow
+    destination: {}
+    source: {}

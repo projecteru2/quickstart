@@ -1,0 +1,14 @@
+- name: download calicoctl
+  uri:
+    url: https://github.com/projectcalico/calicoctl/releases/download/{{ calico_version }}.0/calicoctl
+    dest: /usr/bin/calicoctl
+    follow_redirects: yes
+    status_code:
+      - 302
+      - 304
+      - 200
+
+- name: chmod +x calicoctl
+  file:
+    path: /usr/bin/calicoctl
+    mode: '0755'

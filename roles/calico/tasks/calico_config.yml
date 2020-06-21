@@ -1,0 +1,9 @@
+- name: mkdir calicoctl config dir
+  file:
+    path: /etc/calico
+    state: directory
+
+- name: render calicoctl config
+  template:
+    src: calicoctl.cfg.j2
+    dest: /etc/calico/calicoctl.cfg

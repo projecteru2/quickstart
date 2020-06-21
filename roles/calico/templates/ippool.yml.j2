@@ -1,0 +1,8 @@
+- apiVersion: projectcalico.org/v3
+  kind: IPPool
+  metadata:
+    name: {{ calico_ippool_name }}
+  spec:
+    natOutgoing: true
+    ipipMode: CrossSubnet
+    cidr: {{ calico_ippool_cidr }}

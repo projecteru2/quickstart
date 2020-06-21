@@ -1,0 +1,15 @@
+- name: set ip_forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: set nf_conntrack_max
+  sysctl:
+    name: net.netfilter.nf_conntrack_max
+    value: '1000000'
+    sysctl_set: yes
+    state: present
+    reload: yes

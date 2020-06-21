@@ -1,0 +1,11 @@
+- include: etcd_binary.yml
+  tags:
+    - etcd_binary
+
+- include: etcd_config.yml
+  tags:
+    - etcd_config
+
+- include: etcd_launch.yml
+  tags:
+    - etcd_launch

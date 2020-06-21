@@ -1,0 +1,10 @@
+
+- name: load packages list
+  include_vars:
+    file: "../vars/pkg-{{ ansible_distribution }}.yml"
+
+- name: install packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages|flatten(levels=1) }}"

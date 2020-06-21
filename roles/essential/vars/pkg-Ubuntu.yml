@@ -1,0 +1,3 @@
+packages:
+  - lvm2
+  - openssl

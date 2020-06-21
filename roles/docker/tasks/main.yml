@@ -1,0 +1,11 @@
+- include: docker_install.yml
+  tags:
+    - docker_install
+
+- include: docker_config.yml
+  tags:
+    - docker_config
+
+- include: docker_launch.yml
+  tags:
+    - docker_launch

@@ -1,0 +1,19 @@
+- name: get lsb_release
+  shell: lsb_release -cs
+  register: lsb_release
+
+- name: setup docker repo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ lsb_release.stdout }} stable
+    state: present
+
+- name: install docker suit
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    allow_unauthenticated: yes
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io

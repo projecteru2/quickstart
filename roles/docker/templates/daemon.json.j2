@@ -1,0 +1,4 @@
+{
+  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
+  "cluster-store": "etcd://{% for host in groups['etcd'] %}{{ host }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
+}

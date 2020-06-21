@@ -1,0 +1,7 @@
+apiVersion: projectcalico.org/v3
+
+kind: CalicoAPIConfig
+metadata:
+spec:
+  datastoreType: "etcdv3"
+  etcdEndpoints: {% for host in groups['etcd'] %}http://{{ host }}:2379{% if not loop.last %},{% endif %}{% endfor %}

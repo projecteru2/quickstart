@@ -1,0 +1,2 @@
+- name: run calico node
+  command: calicoctl node run --node-image=calico/node:release-{{ calico_version }} --disable-docker-networking

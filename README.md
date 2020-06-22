@@ -5,26 +5,17 @@ Launch a Eru core and agent, run lambda script on it.
 
 ### Requirements
 
-* CentOS 7 with kernel version supporting Docker (>2.6)
-* all nodes MUST have distinguished hostname
-* iptables MUST be prepared to ensure communication over layer 3 and layer 4
+* Ubuntu>=1604
+* ansible>=2.9.10
+* sshpass if ansible runs on macOS
 
 ### Run Standalone Node
 
-```
-bash quickstart.sh
-```
-
-### Add Agent Nodes
-
-Assume standalone node has IP address `$CORE_IP`:
+prepare your inventory and
 
 ```
-export ERU_ETCD=$CORE_IP:2379 ERU_CORE=$CORE_IP:5001 NODE_CPU=1 NODE_MEMORY=498916000
-bash add_node.sh
+ansible-playbook  -i inventory.yml cluster.yml
 ```
-
-`NODE_CPU` and `NODE_MEMORY` is to be adjusted on node capacity, and `NODE_MEMORY` is calculated on bytes.
 
 ### Usage
 

@@ -1,0 +1,37 @@
+all:
+  children:
+    etcd:
+      hosts:
+        10.0.0.1:
+          etcd_name: etcd0
+        10.0.0.2:
+          etcd_name: etcd1
+        10.0.0.3:
+          etcd_name: etcd2
+      vars:
+        etcd_version: v3.3.4
+        ansible_user: root
+        ansible_ssh_pass: root
+
+    core:
+      hosts:
+        10.0.0.4:
+
+    node_docker:
+      hosts:
+        10.0.0.5:
+        10.0.0.6:
+
+    node_yavirt:
+      hosts:
+        10.0.0.3:
+
+    calico:
+      children:
+        core:
+        node_docker:
+        node_yavirt:
+      vars:
+        calico_version: v3.4
+        calico_ippool_name: testpool
+        calico_ippool_cidr: 10.10.0.0/16

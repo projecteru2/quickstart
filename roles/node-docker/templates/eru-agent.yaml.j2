@@ -1,0 +1,18 @@
+pid: /tmp/agent.pid
+
+health_check_interval: 5
+health_check_timeout: 10
+core: 127.0.0.1:5001
+
+docker:
+  endpoint: tcp://127.0.0.1:2376
+metrics:
+  step: 30
+  transfers:
+    - 127.0.0.1:8125
+api:
+  addr: 127.0.0.1:12345
+log:
+  forwards:
+    - tcp://127.0.0.1:5411
+  stdout: False

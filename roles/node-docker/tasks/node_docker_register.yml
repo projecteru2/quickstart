@@ -1,0 +1,29 @@
+- name: set node name
+  shell: hostname
+  register: hostname
+
+- name: eru get node
+  delegate_to: "{{ groups['core'] | first }}"
+  shell: /root/go/bin/cli node get $HOSTNAME
+  args:
+    executable: /bin/bash
+  register: get_node
+  ignore_errors: yes
+
+- name: eru add node
+  delegate_to: "{{ groups['core'] | first }}"
+  shell: /root/go/bin/cli node add --nodename $HOSTNAME --endpoint tcp://{{ ansible_host }}:2376 eru
+  args:
+    executable: /bin/bash
+  when: get_node.rc != 0
+
+- name: render eru agent
+  template:
+    src: eru-agent.yaml.j2
+    dest: /etc/eru/agent.yaml
+
+- name: run eru agent
+  delegate_to: "{{ groups['core'] | first }}"
+  shell: /root/go/bin/cli container deploy --pod eru --node {{ hostname.stdout }} --entry agent --file /etc/eru/agent.yaml:/agent.yaml --network host --image projecteru2/agent --cpu 0 --memory 0 --env ERU_HOSTNAME={{ hostname.stdout }} https://raw.githubusercontent.com/projecteru2/agent/master/spec.yaml
+  args:
+    executable: /bin/bash

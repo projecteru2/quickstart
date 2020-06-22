@@ -1,0 +1,3 @@
+- name: set etcd_endpoints
+  set_fact:
+    etcd_endpoints: "{{ groups['etcd'] | map('regex_replace', '^', 'http://') | map('regex_replace', '$', ':2379') | join(',') }}"

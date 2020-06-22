@@ -1,4 +1,8 @@
 
+- name: set hostname if necessary
+  hostname:
+    name: "{{ ansible_host | regex_replace('\\.', '-') }}"
+
 - name: load packages list
   include_vars:
     file: "../vars/pkg-{{ ansible_distribution }}.yml"
@@ -8,3 +12,5 @@
     name: "{{ item }}"
     state: latest
   loop: "{{ packages|flatten(levels=1) }}"
+
+- include: set_vars.yml

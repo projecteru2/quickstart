@@ -1,0 +1,16 @@
+- name: try get minions
+  shell: docker inspect minions
+  register: inspect_minions
+
+- name: run minions
+  shell: docker run -d --restart always --name minions --network host -v /var/run/docker/plugins/:/var/run/docker/plugins --privileged --env ETCD_ENDPOINTS={{ etcd_endpoints }} projecteru2/minions /usr/bin/eru-minions
+  when: inspect_minions.rc != 0
+
+- name: try fetch network
+  shell: docker network inspect testpool
+  register: inspect_network
+  ignore_errors: yes
+
+- name: create network
+  shell: docker network create --driver calico --ipam-driver calico-ipam --subnet {{ calico_ippool_cidr }} {{ calico_ippool_name }}
+  when: inspect_network.rc != 0

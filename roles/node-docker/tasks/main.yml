@@ -1,0 +1,10 @@
+- include: node_docker_kernel.yml
+  tags: node_docker_kernel
+
+- include: node_docker_cnm.yml
+  tags:
+    - node_docker_cnm
+
+- include: node_docker_register.yml
+  tags:
+    - node_docker_register

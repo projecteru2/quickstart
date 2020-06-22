@@ -1,0 +1,15 @@
+- include: core_config.yml
+  tags:
+    - core_config
+
+- include: core_launch.yml
+  tags:
+    - core_launch
+
+- include: core_cli.yml
+  tags:
+    - core_cli
+
+- include: core_resource.yml
+  tags:
+    - core_resource

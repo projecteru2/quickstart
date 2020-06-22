@@ -1,0 +1,9 @@
+- name: mkdir core config dir
+  file:
+    path: /etc/eru/
+    state: directory
+
+- name: render core config
+  template:
+    src: core.yaml.j2
+    dest: /etc/eru/core.yaml

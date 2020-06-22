@@ -2,7 +2,7 @@ pid: /tmp/agent.pid
 
 health_check_interval: 5
 health_check_timeout: 10
-core: 127.0.0.1:5001
+core: {{ groups['core'] | first }}:5001
 
 docker:
   endpoint: tcp://127.0.0.1:2376

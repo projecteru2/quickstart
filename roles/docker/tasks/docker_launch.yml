@@ -2,6 +2,6 @@
   systemd:
     name: docker
     daemon_reload: yes
-    state: started
+    state: restarted
     enabled: yes
     masked: no

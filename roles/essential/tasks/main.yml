@@ -1,7 +1,7 @@
 
 - name: set hostname if necessary
   hostname:
-    name: "{{ ansible_host | regex_replace('\\.', '-') }}"
+    name: "{{ inventory_hostname | regex_replace('\\.', '-') }}"
 
 - name: load packages list
   include_vars:
@@ -14,3 +14,5 @@
   loop: "{{ packages|flatten(levels=1) }}"
 
 - include: set_vars.yml
+
+- include: disable-iptables.yml

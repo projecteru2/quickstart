@@ -1,0 +1,2 @@
+- name: create pod
+  shell: /root/go/bin/cli pod add eru

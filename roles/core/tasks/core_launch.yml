@@ -1,0 +1,2 @@
+- name: run core container
+  shell: docker run -d --name eru-core --net host --restart always -v /etc/eru:/etc/eru projecteru2/core /usr/bin/eru-core

@@ -2,8 +2,8 @@ name: {{ etcd_name }}
 data-dir: /var/lib/etcd
 listen-peer-urls: http://0.0.0.0:2380
 listen-client-urls: http://0.0.0.0:2379
-initial-advertise-peer-urls: http://{{ ansible_host }}:2380
-advertise-client-urls: http://{{ ansible_host }}:2379
+initial-advertise-peer-urls: http://{{ inventory_hostname }}:2380
+advertise-client-urls: http://{{ inventory_hostname }}:2379
 initial-cluster: {% for host in groups['etcd'] %}{{ hostvars[host].etcd_name }}=http://{{ host }}:2380{% if not loop.last %},{% endif %}{% endfor %}
 
 initial-cluster-token: eru

@@ -1,7 +1,4 @@
+allow_duplicates: no
 dependencies:
   - role: docker
-    tags:
-      - docker
   - role: calico
-    tags:
-      - calico

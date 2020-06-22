@@ -1,3 +1,8 @@
+- name: clean existing config
+  file:
+    path: /etc/docker/daemon.json
+    state: absent
+
 - include: docker_centos_install.yml
   when: ansible_distribution == "CentOS"
 

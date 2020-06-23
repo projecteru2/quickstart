@@ -1,0 +1,12 @@
+virt_dir = "/opt/yavirtd"
+virt_bridge = "yavirbr0"
+
+log_file = "/opt/yavirtd/log/yavirtd.log"
+
+etcd_prefix = "/yavirt-dev/v1"
+etcd_endpoints = {{ etcd_endpoints.split(',') }}
+
+core_addr = "{{ core_host }}:5001"
+core_username = ""
+core_password = ""
+core_status_check_interval = "64s"

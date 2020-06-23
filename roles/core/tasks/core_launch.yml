@@ -3,11 +3,7 @@
   ignore_errors: yes
   when: upgrade
 
-- name: inspect core container
-  shell: docker inspect eru-core
-  register: inspect_core
-  ignore_errors: yes
-
 - name: run core container
   shell: docker run -d --name eru-core --net host --restart always -v /etc/eru:/etc/eru projecteru2/core /usr/bin/eru-core
-  when: inspect_core.rc != 0
+  register: res
+  failed_when: res.rc != 0 and 'Conflict' not in res.stderr

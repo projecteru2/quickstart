@@ -1,0 +1,32 @@
+- name: install deps
+  apt:
+    update_cache: yes
+    allow_unauthenticated: yes
+    name: "{{ item }}"
+  loop:
+    - bridge-utils
+    - qemu
+    - qemu-kvm
+    - libnss-libvirt
+    - libvirt0
+    - libvirt-clients
+    - libvirt-daemon
+    - libvirt-daemon-driver-storage-gluster
+    - libvirt-daemon-driver-storage-rbd
+    - libvirt-daemon-driver-storage-sheepdog
+    - libvirt-daemon-driver-storage-zfs
+    - libvirt-daemon-system
+    - libvirt-dev
+    - libvirt-doc
+    - libvirt-sanlock
+    - libvirt-wireshark
+    - libguestfs-tools
+    - libguestfs-dev
+
+- name: launch libvirtd
+  systemd:
+    name: libvirtd
+    daemon_reload: yes
+    state: started
+    enabled: yes
+    masked: no

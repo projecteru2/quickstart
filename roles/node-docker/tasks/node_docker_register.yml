@@ -1,17 +1,12 @@
-- name: set node name
-  shell: hostname
-  register: hostname
-
-- name: eru get node
-  delegate_to: "{{ groups['core'] | first }}"
-  shell: /root/go/bin/cli node get {{ hostname.stdout }}
-  register: get_node
-  ignore_errors: yes
+- name: eru add docker pod
+  delegate_to: "{{ core_host }}"
+  shell: /root/go/bin/cli pod add docker
 
 - name: eru add node
-  delegate_to: "{{ groups['core'] | first }}"
-  shell: /root/go/bin/cli node add --nodename {{ hostname.stdout }} --endpoint tcp://{{ inventory_hostname }}:2376 eru
-  when: get_node.rc != 0
+  delegate_to: "{{ core_host }}"
+  shell: /root/go/bin/cli node add --nodename {{ node_docker_name }} --endpoint tcp://{{ inventory_hostname }}:2376 docker
+  register: res
+  failed_when: res.rc != 0 and 'Key exists' not in res.stderr
 
 - name: mkdir /etc/eru
   file:
@@ -24,5 +19,5 @@
     dest: /etc/eru/agent.yaml
 
 - name: run eru agent
-  delegate_to: "{{ groups['core'] | first }}"
-  shell: /root/go/bin/cli container deploy --pod eru --node {{ hostname.stdout }} --entry agent --file /etc/eru/agent.yaml:/agent.yaml --network host --image projecteru2/agent --cpu 0 --memory 0 --env ERU_HOSTNAME={{ hostname.stdout }} https://raw.githubusercontent.com/projecteru2/agent/master/spec.yaml
+  delegate_to: "{{ core_host }}"
+  shell: /root/go/bin/cli container deploy --pod eru --node {{ node_docker_name }} --entry agent --file /etc/eru/agent.yaml:/agent.yaml --network host --image projecteru2/agent --cpu 0 --memory 0 --env ERU_HOSTNAME={{ node_docker_name }} https://raw.githubusercontent.com/projecteru2/agent/master/spec.yaml

@@ -1,0 +1,4 @@
+allow_duplicates: no
+dependencies:
+  - role: essential
+  - role: docker

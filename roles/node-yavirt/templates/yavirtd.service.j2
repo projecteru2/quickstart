@@ -1,0 +1,16 @@
+[Unit]
+Description=yavirtd - Yet another virt. daemon
+After=network.target
+Wants=network-online.target
+
+[Service]
+User=root
+PermissionsStartOnly=true
+Environment=ETCD_ENDPOINTS=http://{{ core_host }}:2379
+Environment=HOSTNAME={{ node_yavirt_name }}
+ExecStart=/opt/yavirt-deploy/bin/yavirtd /opt/yavirt-deploy/run/yavirtd.toml
+Restart=on-abnormal
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

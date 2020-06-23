@@ -1,0 +1,19 @@
+- include: node_yavirt_deps.yml
+  tags:
+    - node_yavirt_deps
+
+- include: node_yavirt_binary.yml
+  tags:
+    - node_yavirt_binary
+
+- include: node_yavirt_config.yml
+  tags:
+    - node_yavirt_config
+
+- include: node_yavirt_launch.yml
+  tags:
+    - node_yavirt_launch
+
+- include: node_yavirt_register.yml
+  tags:
+    - node_yavirt_register

@@ -1,0 +1,5 @@
+- name: launch yavirtd
+  systemd:
+    name: yavirtd
+    state: started
+    enabled: yes

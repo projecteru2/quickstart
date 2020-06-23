@@ -1,0 +1,3 @@
+yavirt_image: harbor.shopeemobile.com/cloud/yavirt:{{ yavirt_image_tag }}
+yavirt_bin: /opt/yavirt-deploy/bin
+yavirt_run: /opt/yavirt-deploy/run

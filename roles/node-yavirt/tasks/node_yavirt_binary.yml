@@ -1,0 +1,18 @@
+- name: pull yavirt image
+  shell: docker pull {{ yavirt_image }}
+
+- name: mkdir yavirt dir
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/yavirtd/
+    - /opt/yavirtd/log
+    - "{{ yavirt_bin }}"
+    - "{{ yavirt_run }}"
+
+- name: extract yavirt binary
+  shell: docker run -it --rm -v {{ yavirt_bin }}:/data {{ yavirt_image }} cp {{ item }} /data/
+  loop:
+    - /usr/local/bin/yavirtd
+    - /usr/local/bin/yavirtctl

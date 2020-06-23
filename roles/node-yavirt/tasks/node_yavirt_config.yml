@@ -1,0 +1,14 @@
+- name: render yavirt config
+  template:
+    src: yavirtd.toml.j2
+    dest: "{{ yavirt_run }}/yavirtd.toml"
+
+- name: yavirtctl add host
+  shell: "{{ yavirt_bin }}/yavirtctl --config {{ yavirt_run }}/yavirtd.toml host add --cpu {{ ansible_processor_count }} --memory {{ ansible_memory_mb.real.total }} --storage {{ ansible_mounts | json_query(root_space_query) | first }} --subnet 127.0.0.1 --network calico {{ node_yavirt_name }}"
+  vars:
+    root_space_query: "[?mount=='/'].size_total"
+
+- name: render yavirt service unit file
+  template:
+    src: yavirtd.service.j2
+    dest: /etc/systemd/system/yavirtd.service

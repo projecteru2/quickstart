@@ -1,8 +1,4 @@
 
-- name: set hostname if necessary
-  hostname:
-    name: "{{ inventory_hostname | regex_replace('\\.', '-') }}"
-
 - name: load packages list
   include_vars:
     file: "../vars/pkg-{{ ansible_distribution }}.yml"

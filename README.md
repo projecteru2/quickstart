@@ -6,7 +6,7 @@ Launch a Eru core and agent, run lambda script on it.
 ### Requirements
 
 * Ubuntu>=1604
-* ansible>=2.9.10
+* ansible>=2.9.10, jmespath>=0.10.0
 * sshpass if ansible runs on macOS
 
 ### Run Standalone Node

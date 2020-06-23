@@ -12,7 +12,7 @@
     - "{{ yavirt_run }}"
 
 - name: extract yavirt binary
-  shell: docker run -it --rm -v {{ yavirt_bin }}:/data {{ yavirt_image }} cp {{ item }} /data/
+  shell: docker run -it --rm --user root -v {{ yavirt_bin }}:/data {{ yavirt_image }} cp {{ item }} /data/
   loop:
     - /usr/local/bin/yavirtd
     - /usr/local/bin/yavirtctl

@@ -2,11 +2,11 @@ all:
   children:
     etcd:
       hosts:
-        10.0.0.1:
+        10.233.25.161:
           etcd_name: etcd0
-        10.0.0.2:
+        10.233.100.155:
           etcd_name: etcd1
-        10.0.0.3:
+        10.233.126.140:
           etcd_name: etcd2
       vars:
         etcd_version: v3.3.4
@@ -15,16 +15,25 @@ all:
 
     core:
       hosts:
-        10.0.0.4:
+        10.233.25.161:
 
     node_docker:
       hosts:
-        10.0.0.5:
-        10.0.0.6:
+        10.233.25.161:
+          node_docker_name: docker-10-233-25-161
+        10.233.100.155:
+          node_docker_name: docker-10-233-100-155
+        10.233.126.140:
+          node_docker_name: docker-10-233-126-140
 
     node_yavirt:
       hosts:
-        10.0.0.3:
+        10.233.126.140:
+          node_yavirt_name: yavirt-10-233-126-140
+        10.233.100.155:
+          node_yavirt_name: yavirt-10-233-100-155
+      vars:
+        yavirt_image_tag: 1.0.28-ubuntu1604
 
     calico:
       children:

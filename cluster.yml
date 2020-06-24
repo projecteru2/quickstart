@@ -1,0 +1,27 @@
+- hosts: etcd
+  become: true
+  roles:
+    - role: etcd
+      tags:
+        - etcd
+
+- hosts: core
+  become: true
+  roles:
+    - role: core
+      tags:
+        - core
+
+- hosts: node_docker
+  become: true
+  roles:
+    - role: node-docker
+      tags:
+        - node-docker
+
+- hosts: node_yavirt
+  become: true
+  roles:
+    - role: node-yavirt
+      tags:
+        - node-yavirt

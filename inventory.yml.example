@@ -29,9 +29,7 @@ all:
     node_yavirt:
       hosts:
         10.233.126.140:
-          node_yavirt_name: yavirt-10-233-126-140
         10.233.100.155:
-          node_yavirt_name: yavirt-10-233-100-155
       vars:
         yavirt_image_tag: 1.0.28-ubuntu1604
 

@@ -3,6 +3,8 @@ virt_bridge = "yavirbr0"
 
 log_file = "/opt/yavirtd/log/yavirtd.log"
 
+calico_pools = ["{{ calico_ippool_name }}"]
+
 etcd_prefix = "/yavirt-dev/v1"
 etcd_endpoints = {{ etcd_endpoints.split(',') }}
 

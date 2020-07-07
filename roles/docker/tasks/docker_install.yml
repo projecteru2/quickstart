@@ -3,8 +3,5 @@
     path: /etc/docker/daemon.json
     state: absent
 
-- include: docker_centos_install.yml
-  when: ansible_distribution == "CentOS"
-
 - include: docker_ubuntu_install.yml
   when: ansible_distribution == "Ubuntu"

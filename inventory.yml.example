@@ -21,15 +21,20 @@ all:
       hosts:
         10.233.25.161:
           node_docker_name: docker-10-233-25-161
+          node_calico_name: calico2
         10.233.100.155:
           node_docker_name: docker-10-233-100-155
+          node_calico_name: calico1
         10.233.126.140:
           node_docker_name: docker-10-233-126-140
+          node_calico_name: calico0
 
     node_yavirt:
       hosts:
         10.233.126.140:
+          node_calico_name: calico0
         10.233.100.155:
+          node_calico_name: calico1
       vars:
         yavirt_image_tag: 1.0.28-ubuntu1604
 

@@ -1,5 +1,5 @@
 - name: run minions
-  shell: docker run -d --restart always --name minions --network host -v /var/run/docker/plugins/:/var/run/docker/plugins --privileged --env ETCD_ENDPOINTS={{ etcd_endpoints }} projecteru2/minions /usr/bin/eru-minions
+  shell: docker run -d --restart always --name minions --network host -v /var/run/docker/plugins/:/var/run/docker/plugins --privileged --env ETCD_ENDPOINTS={{ etcd_endpoints }} --hostname {{ node_calico_name }} projecteru2/minions /usr/bin/eru-minions
   register: res
   failed_when: res.rc != 0 and 'Conflict' not in res.stderr
 

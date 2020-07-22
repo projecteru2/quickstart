@@ -5,7 +5,7 @@ rm -fr ${ans_dir}
 git clone https://github.com/projecteru2/quickstart.git ${ans_dir}
 cd ${ans_dir}
 
-hn=127.0.0.1
+hn=`ip a show eth0 | grep inet | grep -v inet6 | awk '{print $2}' | awk -F/ '{print $1}'`
 
 cat <<EOF >inventory.yml
 all:
@@ -36,5 +36,8 @@ all:
         calico_ippool_name: testpool
         calico_ippool_cidr: 10.10.0.0/16
 EOF
+
+rm -fr /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock
+dpkg --configure -a
 
 ansible-playbook --become -i inventory.yml cluster.yml

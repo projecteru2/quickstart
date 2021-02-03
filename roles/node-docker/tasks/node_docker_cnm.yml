@@ -1,9 +1,33 @@
-- name: run minions
-  shell: docker run -d --restart always --name minions --network host -v /var/run/docker/plugins/:/var/run/docker/plugins --privileged --env ETCD_ENDPOINTS={{ etcd_endpoints }} --hostname {{ node_calico_name }} projecteru2/minions /usr/bin/eru-minions
-  register: res
-  failed_when: res.rc != 0 and 'Conflict' not in res.stderr
+- name: download barrel binary
+  get_url:
+    url: https://github.com/projecteru2/barrel/releases/download/v21.01.30/barrel_21.01.30_Linux_x86_64.tar.gz
+    dest: /tmp/barrel.tar.gz
+    force: yes
 
-- name: create network
+- name: extract barrel binary
+  unarchive:
+    src: /tmp/barrel.tar.gz
+    dest: /usr/bin/
+
+- name: configuring barrel
+  template:
+    src: barrel.conf.j2
+    dest: /etc/eru/barrel.conf
+
+- name: barrel systemd unit file
+  template:
+    src: barrel.service.j2
+    dest: /etc/systemd/system/barrel.service
+
+- name: start barrel service
+  systemd:
+    name: barrel
+    daemon_reload: yes
+    state: started
+    enabled: yes
+    masked: no
+
+- name: register barrel to docker
   shell: docker network create --driver calico --ipam-driver calico-ipam --subnet {{ calico_ippool_cidr }} {{ calico_ippool_name }}
   register: res
   failed_when: res.rc != 0 and 'already exists' not in res.stderr

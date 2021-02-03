@@ -4,6 +4,10 @@ health_check_interval: 5
 health_check_timeout: 10
 core: {{ groups['core'] | first }}:5001
 
+etcd:
+  machines:
+    - http://127.0.0.1:2379
+
 docker:
   endpoint: tcp://127.0.0.1:2376
 metrics:

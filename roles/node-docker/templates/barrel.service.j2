@@ -1,0 +1,17 @@
+[Unit]
+Description=Eru Docker Proxy
+After=network.target
+After=network-online.target
+Wants=network-online.target
+Before=docker.service
+
+[Service]
+Type=simple
+# set GOMAXPROCS to number of processors
+EnvironmentFile=/etc/eru/barrel.conf
+ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /usr/bin/eru-barrel"
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

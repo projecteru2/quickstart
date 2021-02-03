@@ -40,4 +40,6 @@ EOF
 rm -fr /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock
 dpkg --configure -a
 
+apt update -y
+
 ansible-playbook --become -i inventory.yml cluster.yml

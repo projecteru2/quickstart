@@ -43,3 +43,5 @@ dpkg --configure -a
 apt update -y
 
 ansible-playbook --become -i inventory.yml cluster.yml
+
+source /etc/profile

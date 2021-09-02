@@ -3,18 +3,16 @@
     repo: ppa:longsleep/golang-backports
     state: present
 
-- name: install golang
-  shell: wget -O /tmp/go.tar.gz https://dl.google.com/go/go1.17.linux-amd64.tar.gz  && rm -rf /usr/local/go && tar -C /usr/local -xzf /tmp/go.tar.gz
-
-- name: add go into $PATH
+- name: add go and cli into $PATH
   lineinfile:
-    path: /root/.bashrc
-    line: PATH=$PATH:/usr/local/go/bin
+    path: /etc/profile
+    line: PATH=$PATH:/usr/local/go/bin:/root/go/bin
+
+- name: install golang
+  unarchive:
+    src: https://dl.google.com/go/go1.17.linux-amd64.tar.gz
+    dest : /usr/local
+    remote_src: yes
 
 - name: install cli
-  shell: GO111MODULE=on go get github.com/projecteru2/cli
-
-- name: add cli into $PATH
-  lineinfile:
-    path: /root/.bashrc
-    line: PATH=/root/go/bin:$PATH
+  shell: GO111MODULE=on /usr/local/go/bin/go install github.com/projecteru2/cli@latest

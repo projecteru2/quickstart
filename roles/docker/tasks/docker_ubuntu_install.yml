@@ -2,6 +2,11 @@
   shell: lsb_release -cs
   register: lsb_release
 
+- name: add docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
 - name: setup docker repo
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ lsb_release.stdout }} stable

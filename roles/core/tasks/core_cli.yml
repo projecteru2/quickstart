@@ -6,7 +6,7 @@
 - name: add go and cli into $PATH
   lineinfile:
     path: /etc/profile
-    line: PATH=$PATH:/usr/local/go/bin:/root/go/bin
+    line: export PATH=$PATH:/usr/local/go/bin:/root/go/bin
 
 - name: install golang
   unarchive:
@@ -14,5 +14,21 @@
     dest : /usr/local
     remote_src: yes
 
+- name: create temporary cli container
+  docker_container:
+    name: temp_data_container
+    image: projecteru2/cli
+    state: present
+    volumes:
+      - your_data_volume:/data
+
 - name: install cli
-  shell: GO111MODULE=on /usr/local/go/bin/go install github.com/projecteru2/cli@latest
+  command: docker cp temp_data_container:/usr/bin/eru-cli /usr/local/bin
+
+- name: install cli lib
+  command: docker cp temp_data_container:/lib/ld-musl-x86_64.so.1 /lib
+
+- name: remove temporary cli container
+  docker_container:
+    name: temp_data_container
+    state: absent

@@ -1,9 +1,9 @@
 - name: eru add yavirt pod
   delegate_to: "{{ core_host }}"
-  shell: /root/go/bin/cli pod add virt
+  shell: eru-cli pod add virt
 
 - name: eru add node
   delegate_to: "{{ core_host }}"
-  shell: /root/go/bin/cli node add --nodename {{ node_yavirt_name }} --endpoint virt-grpc://{{ inventory_hostname }}:9697 virt
+  shell: eru-cli node add --nodename {{ node_yavirt_name }} --endpoint virt-grpc://{{ inventory_hostname }}:9697 virt
   register: res
   failed_when: res.rc != 0 and 'Key exists' not in res.stderr

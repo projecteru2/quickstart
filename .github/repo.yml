@@ -1,0 +1,11 @@
+description: "Ansible playbook that deploys an Eru cluster on Ubuntu: etcd, eru-core, and Docker nodes registered with core and running eru-agent."
+homepage: https://projecteru2.github.io/quickstart/
+topics:
+  - eru
+  - ansible
+  - playbook
+  - deployment
+  - docker
+  - etcd
+  - ubuntu
+  - cluster

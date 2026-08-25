@@ -1,0 +1,3 @@
+title: quickstart
+description: Ansible playbook that deploys an Eru cluster on Ubuntu hosts
+theme: jekyll-theme-primer

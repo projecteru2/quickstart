@@ -1,0 +1,22 @@
+pid: /tmp/agent.pid
+
+core:
+  - {{ core_host }}:{{ core_port }}
+
+heartbeat_interval: 60
+store: grpc
+runtime: docker
+
+docker:
+  endpoint: unix:///var/run/docker.sock
+
+api:
+  addr: 127.0.0.1:12345
+
+log:
+  stdout: true
+
+healthcheck:
+  interval: 120
+  timeout: 10
+  cache_ttl: 300

@@ -1,0 +1,12 @@
+---
+# Recreate the core and agent containers even when they already run.
+upgrade: false
+
+# Pod every node joins, and the pod core builds images on.
+eru_pod: eru
+
+# Port core binds its gRPC API to.
+core_port: 5001
+
+# Host running core; every eru-cli call is delegated to it.
+core_host: "{{ groups['core'] | first }}"

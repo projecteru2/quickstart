@@ -1,15 +1,20 @@
-- include: core_config.yml
+---
+- name: Configure core
+  ansible.builtin.import_tasks: core_config.yml
   tags:
     - core_config
 
-- include: core_launch.yml
+- name: Launch core
+  ansible.builtin.import_tasks: core_launch.yml
   tags:
     - core_launch
 
-- include: core_cli.yml
+- name: Install eru-cli
+  ansible.builtin.import_tasks: core_cli.yml
   tags:
     - core_cli
 
-- include: core_resource.yml
+- name: Create the pod
+  ansible.builtin.import_tasks: core_resource.yml
   tags:
     - core_resource

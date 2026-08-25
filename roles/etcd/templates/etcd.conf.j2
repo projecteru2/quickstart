@@ -1,5 +1,5 @@
 name: {{ etcd_name }}
-data-dir: /var/lib/etcd
+data-dir: {{ etcd_data_dir }}
 listen-peer-urls: http://0.0.0.0:2380
 listen-client-urls: http://0.0.0.0:2379
 initial-advertise-peer-urls: http://{{ inventory_hostname }}:2380
@@ -11,4 +11,3 @@ initial-cluster-state: new
 
 auto-compaction-retention: "1"
 quota-backend-bytes: -1
-enable-v2: true

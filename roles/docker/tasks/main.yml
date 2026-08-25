@@ -1,11 +1,15 @@
-- include: docker_install.yml
+---
+- name: Install docker
+  ansible.builtin.import_tasks: docker_install.yml
   tags:
     - docker_install
 
-- include: docker_config.yml
+- name: Configure docker
+  ansible.builtin.import_tasks: docker_config.yml
   tags:
     - docker_config
 
-- include: docker_launch.yml
+- name: Launch docker
+  ansible.builtin.import_tasks: docker_launch.yml
   tags:
     - docker_launch

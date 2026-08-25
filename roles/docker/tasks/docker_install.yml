@@ -1,7 +1,31 @@
-- name: clean existing config
-  file:
-    path: /etc/docker/daemon.json
-    state: absent
+---
+- name: Ensure apt keyring directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
 
-- include: docker_ubuntu_install.yml
-  when: ansible_distribution == "Ubuntu"
+- name: Fetch docker apt key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+
+- name: Add docker apt repository
+  ansible.builtin.deb822_repository:
+    name: docker
+    types: deb
+    uris: https://download.docker.com/linux/ubuntu
+    suites: "{{ ansible_distribution_release }}"
+    components: stable
+    signed_by: /etc/apt/keyrings/docker.asc
+    state: present
+
+- name: Install docker engine
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+    update_cache: true

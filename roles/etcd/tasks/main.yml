@@ -1,11 +1,15 @@
-- include: etcd_binary.yml
+---
+- name: Install etcd binaries
+  ansible.builtin.import_tasks: etcd_binary.yml
   tags:
     - etcd_binary
 
-- include: etcd_config.yml
+- name: Configure etcd
+  ansible.builtin.import_tasks: etcd_config.yml
   tags:
     - etcd_config
 
-- include: etcd_launch.yml
+- name: Launch etcd
+  ansible.builtin.import_tasks: etcd_launch.yml
   tags:
     - etcd_launch

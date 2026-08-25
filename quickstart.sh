@@ -1,47 +1,47 @@
 #!/bin/bash -eu
+# Stand up a single-node Eru cluster on this machine.
+# Run it as root on a fresh Ubuntu host: bash quickstart.sh
 
-ans_dir=/tmp/quickstart
-rm -fr ${ans_dir}
-git clone https://github.com/projecteru2/quickstart.git ${ans_dir}
-cd ${ans_dir}
+ans_dir=${ANSIBLE_DIR:-/tmp/quickstart}
+etcd_version=${ETCD_VERSION:-v3.6.14}
 
-hn=$(ip a show eth0 | grep inet | grep -v inet6 | awk '{print $2}' | awk -F/ '{print $1}')
+if ! command -v ansible-playbook >/dev/null; then
+  apt update
+  apt install -y ansible git
+fi
 
-cat <<EOF >inventory.yml
+rm -fr "${ans_dir}"
+git clone https://github.com/projecteru2/quickstart.git "${ans_dir}"
+cd "${ans_dir}"
+
+ip=$(ip -4 -o route get 1.1.1.1 | awk '{for (i = 1; i < NF; i++) if ($i == "src") print $(i + 1)}')
+if [ -z "${ip}" ]; then
+  echo "cannot determine this host's IPv4 address" >&2
+  exit 1
+fi
+
+cat >inventory.yml <<EOF
+---
 all:
   children:
     etcd:
       hosts:
-        ${hn}:
+        ${ip}:
           etcd_name: etcd0
       vars:
-        etcd_version: v3.3.4
+        etcd_version: ${etcd_version}
 
     core:
       hosts:
-        ${hn}:
+        ${ip}:
 
     node_docker:
       hosts:
-        ${hn}:
-          node_docker_name: docker0
-          node_calico_name: calico0
+        ${ip}:
+          node_docker_name: node-$(echo "${ip}" | tr . -)
 
-    calico:
-      children:
-        core:
-        node_docker:
-      vars:
-        calico_version: v3.4
-        calico_ippool_name: testpool
-        calico_ippool_cidr: 10.10.0.0/16
+  vars:
+    ansible_connection: local
 EOF
 
-rm -fr /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock
-dpkg --configure -a
-
-apt update -y
-
-ansible-playbook --become -i inventory.yml cluster.yml
-
-source /etc/profile
+ansible-playbook -i inventory.yml cluster.yml

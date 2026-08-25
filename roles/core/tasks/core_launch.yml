@@ -1,9 +1,28 @@
-- name: remove current if update
-  shell: docker rm -f eru-core
-  ignore_errors: yes
+---
+- name: Pull core image
+  ansible.builtin.command: "docker pull {{ core_image }}"
+  changed_when: true
+
+- name: Remove the running core container
+  ansible.builtin.command: "docker rm -f {{ core_container_name }}"
+  changed_when: true
   when: upgrade
 
-- name: run core container
-  shell: docker run -d --name eru-core --net host --restart always -v /etc/eru:/etc/eru projecteru2/core /usr/bin/eru-core
-  register: res
-  failed_when: res.rc != 0 and 'Conflict' not in res.stderr
+- name: Run core container
+  ansible.builtin.command: >-
+    docker run -d
+    --name {{ core_container_name }}
+    --net host
+    --restart always
+    -v {{ core_config_dir }}:/etc/eru
+    {{ core_image }}
+    /usr/bin/eru-core
+  register: core_run
+  changed_when: core_run.rc == 0
+  failed_when: core_run.rc != 0 and 'Conflict' not in core_run.stderr
+
+- name: Wait for core to accept connections
+  ansible.builtin.wait_for:
+    host: "{{ inventory_hostname }}"
+    port: "{{ core_port }}"
+    timeout: 60

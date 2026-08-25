@@ -1,9 +1,12 @@
-- name: mkdir core config dir
-  file:
-    path: /etc/eru/
+---
+- name: Ensure core config directory
+  ansible.builtin.file:
+    path: "{{ core_config_dir }}"
     state: directory
+    mode: '0755'
 
-- name: render core config
-  template:
+- name: Render core config
+  ansible.builtin.template:
     src: core.yaml.j2
-    dest: /etc/eru/core.yaml
+    dest: "{{ core_config_dir }}/core.yaml"
+    mode: '0644'

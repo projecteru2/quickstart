@@ -1,7 +1,0 @@
-apiVersion: projectcalico.org/v3
-
-kind: CalicoAPIConfig
-metadata:
-spec:
-  datastoreType: "etcdv3"
-  etcdEndpoints: {{ groups['etcd'] | map('regex_replace', '^', 'http://') | map('regex_replace', '$', ':2379') | join(',') }}

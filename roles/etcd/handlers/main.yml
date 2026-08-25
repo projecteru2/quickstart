@@ -1,8 +1,6 @@
 ---
-- name: Launch etcd
+- name: Restart etcd
   ansible.builtin.systemd_service:
     name: etcd
     daemon_reload: true
-    state: started
-    enabled: true
-    masked: false
+    state: restarted

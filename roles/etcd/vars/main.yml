@@ -1,1 +1,3 @@
-etcd_basename: etcd-{{ etcd_version }}-linux-amd64
+---
+etcd_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' }}"
+etcd_basename: "etcd-{{ etcd_version }}-linux-{{ etcd_arch }}"

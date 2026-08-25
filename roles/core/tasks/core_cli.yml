@@ -1,34 +1,18 @@
-- name: add golang repo
-  apt_repository:
-    repo: ppa:longsleep/golang-backports
-    state: present
+---
+- name: Pull cli image
+  ansible.builtin.command: "docker pull {{ core_cli_image }}"
+  changed_when: true
 
-- name: add go and cli into $PATH
-  lineinfile:
-    path: /etc/profile
-    line: export PATH=$PATH:/usr/local/go/bin:/root/go/bin
+- name: Create a temporary cli container
+  ansible.builtin.command: "docker create --name eru-cli-installer {{ core_cli_image }}"
+  register: core_cli_create
+  changed_when: core_cli_create.rc == 0
+  failed_when: core_cli_create.rc != 0 and 'already in use' not in core_cli_create.stderr
 
-- name: install golang
-  unarchive:
-    src: https://dl.google.com/go/go1.17.linux-amd64.tar.gz
-    dest : /usr/local
-    remote_src: yes
+- name: Copy the eru-cli binary out of the image
+  ansible.builtin.command: docker cp eru-cli-installer:/usr/bin/eru-cli /usr/local/bin/eru-cli
+  changed_when: true
 
-- name: create temporary cli container
-  docker_container:
-    name: temp_data_container
-    image: projecteru2/cli
-    state: present
-    volumes:
-      - your_data_volume:/data
-
-- name: install cli
-  command: docker cp temp_data_container:/usr/bin/eru-cli /usr/local/bin
-
-- name: install cli lib
-  command: docker cp temp_data_container:/lib/ld-musl-x86_64.so.1 /lib
-
-- name: remove temporary cli container
-  docker_container:
-    name: temp_data_container
-    state: absent
+- name: Remove the temporary cli container
+  ansible.builtin.command: docker rm -f eru-cli-installer
+  changed_when: true

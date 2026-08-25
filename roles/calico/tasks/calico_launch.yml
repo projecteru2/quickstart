@@ -1,8 +1,0 @@
-- name: inspect calico
-  shell: docker inspect calico-node
-  register: inspect_calico
-  ignore_errors: yes
-
-- name: run calico node
-  command: calicoctl node run --name={{ node_calico_name }} --node-image=calico/node:release-{{ calico_version }} --disable-docker-networking
-  when: inspect_calico.rc != 0

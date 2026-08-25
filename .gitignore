@@ -1,3 +1,5 @@
-*~
-*.swp
 inventory.yml
+*.retry
+.DS_Store
+*.swp
+*~

@@ -1,0 +1,5 @@
+---
+core_image: ghcr.io/projecteru2/core:latest
+core_cli_image: ghcr.io/projecteru2/cli:latest
+core_container_name: eru-core
+core_config_dir: /etc/eru

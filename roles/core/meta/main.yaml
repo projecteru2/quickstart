@@ -1,4 +1,0 @@
-allow_duplicates: no
-dependencies:
-  - role: docker
-  - role: calico

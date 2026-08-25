@@ -1,4 +1,0 @@
-- name: disable iptables
-  systemd:
-    name: iptables
-    state: stopped

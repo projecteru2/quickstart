@@ -1,0 +1,10 @@
+---
+- name: Add the node to core
+  ansible.builtin.command: >-
+    eru-cli node add {{ eru_pod }}
+    --nodename {{ node_docker_name }}
+    --endpoint tcp://{{ inventory_hostname }}:{{ docker_api_port }}
+  delegate_to: "{{ core_host }}"
+  register: node_docker_add
+  changed_when: node_docker_add.rc == 0
+  failed_when: node_docker_add.rc != 0 and 'exists' not in node_docker_add.stderr

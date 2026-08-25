@@ -52,7 +52,7 @@ allows — inventory group vars, host vars, or `-e` on the command line.
 | `node_docker_name` | — | Per-host, required: the node name registered with core |
 
 Both images are pinned to `latest` by default. For a reproducible deployment set them to a released
-tag instead, for example `core_image: ghcr.io/projecteru2/core:v23.10.11`.
+tag instead, for example `core_image: ghcr.io/projecteru2/core:v0.1.0`.
 
 ## Rendered core config
 

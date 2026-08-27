@@ -147,8 +147,10 @@ That is the probe core itself runs when a containerd node is added.
 A `node_cocoon` host runs VM workloads. The playbook deliberately does not install cocoon — its
 hypervisor stack (cloud-hypervisor or firecracker, guest firmware, CNI) has its own documentation
 and release cadence — so the prerequisites on the node are: cocoon installed with its daemon
-running (`node_cocoon_binary`, `node_cocoon_socket`), and `/dev/kvm` present, which on a virtual
-host means nested virtualization. The role's preflight refuses the node otherwise. What the role
+running (`node_cocoon_binary`, `node_cocoon_socket`), `/dev/kvm` present — on a virtual host that
+means nested virtualization — and `mkfs.erofs` from erofs-utils ≥ 1.8 for OCI direct-boot images
+(Ubuntu 22.04 ships 1.2, which cocoon refuses; build erofs-utils from source or use a newer
+distribution). The role's preflight refuses the node otherwise. What the role
 does do: authorizes core's key, raises the journald limits, installs `eru-agent` against the
 daemon socket, and registers the node as `cocoon://<user>@<host>:22` into the `vm` pod. The
 `cocoon:` block in core.yaml (binary, record root, run_dir, cgroup parent) renders only when the

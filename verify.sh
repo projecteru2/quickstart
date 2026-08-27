@@ -66,7 +66,7 @@ step "start"
 eru-cli workload start "${id}"
 
 step "remove"
-eru-cli workload remove "${id}"
+eru-cli workload remove --force "${id}"
 
 step "node resources after the run"
 eru-cli node resource "${node}"

@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash
 # Stand up a single-node Eru cluster on this machine.
 # Run it as root on a fresh Ubuntu host: bash quickstart.sh
 #
@@ -7,6 +7,8 @@
 # process node: set ERU_NODE_KIND=process for the latter.
 
 ans_dir=${ANSIBLE_DIR:-/tmp/quickstart}
+set -eu
+
 node_kind=${ERU_NODE_KIND:-containerd}
 
 case "${node_kind}" in

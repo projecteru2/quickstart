@@ -74,7 +74,7 @@
   notify: Restart containerd
 
 - name: Launch containerd
-  ansible.builtin.systemd_service:
+  ansible.builtin.systemd:
     name: "{{ node_containerd_service }}"
     daemon_reload: true
     state: started

@@ -7,7 +7,7 @@
   notify: Restart core
 
 - name: Launch core
-  ansible.builtin.systemd_service:
+  ansible.builtin.systemd:
     name: "{{ core_service }}"
     daemon_reload: true
     state: started

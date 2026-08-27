@@ -41,7 +41,7 @@ step "deploying ${image} on ${node}"
 deployed=$(eru-cli workload deploy \
   --pod "${pod}" --node "${node}" --entry web --image "${image}" \
   --network "${network}" --cpu 1 --memory 256M --storage 1G --count 1 \
-  "${spec}")
+  "${spec}" 2>&1)
 printf '%s\n' "${deployed}"
 
 id=$(printf '%s' "${deployed}" | grep -oE 'nginx_web_[A-Za-z0-9]+|[0-9a-f]{32}' | head -n 1)

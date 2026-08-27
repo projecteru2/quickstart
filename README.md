@@ -24,6 +24,9 @@ $EDITOR inventory.yml     # your hosts, and which of them run etcd, core and wor
 make up
 ```
 
+The control machine needs root SSH access to every host in the inventory — keys authorized and
+host keys accepted — before `make up`; that is plain Ansible, nothing Eru-specific.
+
 ## Deploying something
 
 `eru-cli` lands on the core hosts, already pointed at core through `ERU`. A deploy needs a spec

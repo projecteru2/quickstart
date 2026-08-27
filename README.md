@@ -73,6 +73,7 @@ running. [`verify.sh`](verify.sh) runs the whole loop — cache the image, deplo
 | `core` | `eru-core`, the `resource-storage` and `resource-gpu` plugins, and `eru-cli` |
 | `node_containerd` | containerd, runc, the CNI plugins, `eru-agent`, and a node registration |
 | `node_process` | `oras` and `eru-agent`; workloads run as transient systemd units |
+| `node_cocoon` | `eru-agent` and a node registration over an existing cocoon install — cocoon itself, per [its own docs](https://github.com/cocoonstack/cocoon), and `/dev/kvm` come first |
 
 Core reaches every node over SSH with a key pair the playbook generates for it, so nodes expose no
 daemon API of their own. A host may belong to `etcd`, `core` and one node group at once — the

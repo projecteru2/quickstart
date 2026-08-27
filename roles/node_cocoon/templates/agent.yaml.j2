@@ -1,0 +1,30 @@
+pid: /run/eru-agent.pid
+
+core:
+  - "{{ core_host }}:{{ core_port }}"
+
+store: grpc
+heartbeat_interval: {{ node_cocoon_heartbeat_interval }}
+
+runtimes:
+  cocoon:
+    socket: {{ node_cocoon_socket }}
+
+meta_dir: {{ node_cocoon_meta_dir }}
+state_dir: {{ node_cocoon_state_dir }}
+
+api:
+  addr: {{ node_cocoon_agent_api_addr }}
+
+metrics:
+  step: 10
+
+log:
+  stdout: false
+
+healthcheck:
+  interval: {{ node_cocoon_healthcheck_interval }}
+  timeout: 10
+  cache_ttl: 300
+
+global_connection_timeout: 15s

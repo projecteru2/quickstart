@@ -20,3 +20,12 @@ core_registry_plain_http: []
 # Optional. The pod whose nodes are allowed to build images. Empty leaves
 # build.node_filter unset, which lets any node build.
 core_build_pod: ""
+
+
+# The cocoon block, rendered only when the inventory has cocoon nodes. Every
+# value must match what the node_cocoon role (and the cocoon install on the
+# node) uses.
+core_cocoon_binary: /usr/local/bin/cocoon
+core_cocoon_record_root: /var/lib/eru/cocoon
+core_cocoon_run_dir: /var/lib/cocoon/run
+core_cocoon_cgroup_parent: cocoon.slice

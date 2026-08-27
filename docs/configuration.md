@@ -189,3 +189,14 @@ nor forwards workload logs anywhere. Add them to the template if you run those c
 The unit keeps upstream's `RestartKillSignal=SIGUSR1`, which lets the agent be restarted without
 withdrawing its node from the cluster. Note that `systemctl restart` does not use that path — it
 stops with `SIGTERM`, which does withdraw the node until the agent comes back.
+
+## node_cocoon
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `node_cocoon_pod` | `vm` (`eru_vm_pod`) | pod the node joins |
+| `node_cocoon_binary` | `/usr/local/bin/cocoon` | the cocoon command core execs over ssh; a sudo wrapper works |
+| `node_cocoon_socket` | `/var/lib/cocoon/run/cocoond.sock` | the daemon socket eru-agent watches |
+| `node_cocoon_record_root` | `/var/lib/eru/cocoon` | durable workload records, must match `core_cocoon_record_root` |
+| `node_cocoon_run_dir` | `/var/lib/cocoon/run` | cocoon run_dir (guest consoles), must match `core_cocoon_run_dir` |
+| `node_cocoon_cgroup_parent` | `cocoon.slice` | slice VMs land in, must match `core_cocoon_cgroup_parent` |

@@ -1,0 +1,35 @@
+---
+- name: Check the cocoon install this role does not perform
+  ansible.builtin.import_tasks: preflight.yml
+  tags:
+    - node_cocoon_preflight
+
+- name: Authorize core over ssh
+  ansible.builtin.import_tasks: ssh.yml
+  tags:
+    - node_cocoon_ssh
+
+- name: Raise the journald rate limits
+  ansible.builtin.import_tasks: journald.yml
+  tags:
+    - node_cocoon_journald
+
+# Core execs cocoon and logs into the node while adding it, so every service
+# this role touched has to be live before registration.
+- name: Apply the pending restarts
+  ansible.builtin.meta: flush_handlers
+
+- name: Install the agent
+  ansible.builtin.import_tasks: agent.yml
+  tags:
+    - node_cocoon_agent
+
+- name: Register the node with core
+  ansible.builtin.import_tasks: register.yml
+  tags:
+    - node_cocoon_register
+
+- name: Launch the agent
+  ansible.builtin.import_tasks: launch.yml
+  tags:
+    - node_cocoon_launch

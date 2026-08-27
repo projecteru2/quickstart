@@ -27,9 +27,11 @@ eru_config_dir: /etc/eru
 eru_ssh_key: /etc/eru/ssh_key
 eru_ssh_user: root
 
-# Pods. Containerd nodes join eru_pod, process nodes join eru_process_pod.
+# Pods. Containerd nodes join eru_pod, process nodes eru_process_pod, cocoon
+# nodes eru_vm_pod.
 eru_pod: eru
 eru_process_pod: proc
+eru_vm_pod: vm
 
 # etcd's ports. Cluster-wide because core and the resource plugins build their
 # machine lists from the etcd group, and cannot see that role's own defaults.

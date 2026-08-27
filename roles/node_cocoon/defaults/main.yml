@@ -1,0 +1,38 @@
+---
+# The name core registers this node under. eru-agent reports status under the
+# same name, so the two must agree; the agent unit gets it as ERU_HOSTNAME.
+node_cocoon_name: "{{ ansible_facts['hostname'] }}"
+node_cocoon_pod: "{{ eru_vm_pod }}"
+
+# How core reaches this node: cocoon://<eru_ssh_user>@<host>:<port>.
+node_cocoon_endpoint_host: "{{ inventory_hostname }}"
+node_cocoon_ssh_port: 22
+
+# Node capacity and labels, same contract as the containerd role.
+node_cocoon_storage: ""
+node_cocoon_labels: []
+
+# The cocoon install this role wires up but does not perform: the binary core
+# execs over ssh, and the daemon socket the agent watches. Install cocoon per
+# its own documentation first; the preflight refuses a node where either is
+# missing or /dev/kvm is absent.
+node_cocoon_binary: /usr/local/bin/cocoon
+node_cocoon_socket: /var/lib/cocoon/run/cocoond.sock
+
+# What core's cocoon block must agree with: where the engine keeps durable
+# workload records on the node, cocoon's run_dir (guest consoles), and the
+# cgroup slice VMs land in.
+node_cocoon_record_root: /var/lib/eru/cocoon
+node_cocoon_run_dir: /var/lib/cocoon/run
+node_cocoon_cgroup_parent: cocoon.slice
+
+# eru-agent.
+node_cocoon_agent_service: eru-agent
+node_cocoon_agent_api_addr: 127.0.0.1:12345
+node_cocoon_heartbeat_interval: 30
+node_cocoon_healthcheck_interval: 30
+node_cocoon_meta_dir: /run/eru/workloads
+node_cocoon_state_dir: /var/lib/eru-agent
+
+node_cocoon_journal_rate_limit_interval: 30s
+node_cocoon_journal_rate_limit_burst: 100000

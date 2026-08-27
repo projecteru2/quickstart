@@ -30,6 +30,11 @@ all:
     # Nodes that run process bundles as systemd units instead of containers.
     # They need no container runtime. Leave the group empty unless you deploy
     # process workloads.
+    # Cocoon nodes run VM workloads. The role only wires an existing cocoon
+    # install into the cluster: cocoon and its daemon come first, per cocoon's
+    # own documentation, and the host needs /dev/kvm.
+    node_cocoon: {}
+
     node_process: {}
 
   vars:

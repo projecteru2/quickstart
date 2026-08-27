@@ -1,0 +1,9 @@
+---
+node_cocoon_ssh_home: "{{ '/root' if eru_ssh_user == 'root' else '/home/' + eru_ssh_user }}"
+
+node_cocoon_agent_stage_dir: "{{ eru_download_dir }}/agent-{{ eru_agent_version }}"
+node_cocoon_agent_file: "agent_{{ eru_agent_version | regex_replace('^v', '') }}_Linux_{{ eru_release_arch }}.tar.gz"
+node_cocoon_agent_url: "https://github.com/projecteru2/agent/releases/download/{{ eru_agent_version }}/{{ node_cocoon_agent_file }}"
+
+node_cocoon_storage_args: "{{ ['--storage=' + node_cocoon_storage] if node_cocoon_storage | length > 0 else [] }}"
+node_cocoon_label_args: "{{ node_cocoon_labels | map('regex_replace', '^', '--label=') | list }}"

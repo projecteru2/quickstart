@@ -36,3 +36,12 @@
     - role: node_process
       tags:
         - node_process
+
+
+- name: Register the cocoon nodes
+  hosts: node_cocoon
+  become: true
+  roles:
+    - role: node_cocoon
+      tags:
+        - node_cocoon

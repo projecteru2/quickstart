@@ -1,0 +1,47 @@
+---
+- name: Check for hardware virtualization
+  ansible.builtin.stat:
+    path: /dev/kvm
+  register: node_cocoon_kvm
+
+- name: Refuse a node without /dev/kvm
+  ansible.builtin.assert:
+    that: node_cocoon_kvm.stat.exists
+    fail_msg: >-
+      /dev/kvm is missing on {{ inventory_hostname }}. Cocoon VMs need hardware
+      virtualization; on a virtual host that means nested virtualization.
+
+- name: Check for the cocoon binary
+  ansible.builtin.stat:
+    path: "{{ node_cocoon_binary }}"
+  register: node_cocoon_bin
+
+- name: Refuse a node without cocoon
+  ansible.builtin.assert:
+    that:
+      - node_cocoon_bin.stat.exists
+      - node_cocoon_bin.stat.executable
+    fail_msg: >-
+      {{ node_cocoon_binary }} is missing on {{ inventory_hostname }}. Install
+      cocoon per its own documentation first; this role only wires an existing
+      install into the cluster.
+
+- name: Check for the cocoon daemon socket
+  ansible.builtin.stat:
+    path: "{{ node_cocoon_socket }}"
+  register: node_cocoon_sock
+
+- name: Refuse a node whose daemon is not running
+  ansible.builtin.assert:
+    that: node_cocoon_sock.stat.exists
+    fail_msg: >-
+      {{ node_cocoon_socket }} is missing on {{ inventory_hostname }} — the
+      cocoon daemon is not running, and eru-agent watches its socket.
+
+- name: Ensure the engine record root
+  ansible.builtin.file:
+    path: "{{ node_cocoon_record_root }}"
+    state: directory
+    owner: "{{ eru_ssh_user }}"
+    group: "{{ eru_ssh_user }}"
+    mode: '0755'

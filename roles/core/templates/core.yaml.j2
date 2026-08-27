@@ -34,6 +34,14 @@ containerd:
 process:
   root: {{ core_process_root }}
   stop_timeout: 10s
+{% if groups['node_cocoon'] | default([]) | length > 0 %}
+
+cocoon:
+  binary: {{ core_cocoon_binary }}
+  root: {{ core_cocoon_record_root }}
+  run_dir: {{ core_cocoon_run_dir }}
+  cgroup_parent: {{ core_cocoon_cgroup_parent }}
+{% endif %}
 
 scheduler:
   maxshare: -1

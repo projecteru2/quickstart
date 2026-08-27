@@ -1,0 +1,4 @@
+---
+core_stage_dir: "{{ eru_download_dir }}/core-{{ eru_core_version }}"
+core_release_file: "core_{{ eru_core_version | regex_replace('^v', '') }}_Linux_{{ eru_release_arch }}.tar.gz"
+core_release_url: "https://github.com/projecteru2/core/releases/download/{{ eru_core_version }}/{{ core_release_file }}"

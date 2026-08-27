@@ -1,4 +1,0 @@
----
-node_docker_agent_image: ghcr.io/projecteru2/agent:latest
-node_docker_agent_container_name: eru-agent
-node_docker_config_dir: /etc/eru

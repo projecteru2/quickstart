@@ -1,0 +1,4 @@
+---
+cli_stage_dir: "{{ eru_download_dir }}/cli-{{ eru_cli_version }}"
+cli_release_file: "eru-cli_{{ eru_cli_version | regex_replace('^v', '') }}_Linux_{{ eru_release_arch }}.tar.gz"
+cli_release_url: "https://github.com/projecteru2/cli/releases/download/{{ eru_cli_version }}/{{ cli_release_file }}"

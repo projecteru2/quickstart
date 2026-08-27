@@ -1,0 +1,29 @@
+---
+# A process node runs bundles as transient systemd units, so it needs no
+# container runtime. It does need oras: a process image is an oci artifact core
+# pulls onto the node with it.
+- name: Ensure the oras staging directory
+  ansible.builtin.file:
+    path: "{{ node_process_oras_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack the oras release
+  ansible.builtin.unarchive:
+    src: "{{ node_process_oras_url }}"
+    remote_src: true
+    dest: "{{ node_process_oras_stage_dir }}"
+    creates: "{{ node_process_oras_stage_dir }}/oras"
+
+- name: Install oras
+  ansible.builtin.copy:
+    src: "{{ node_process_oras_stage_dir }}/oras"
+    remote_src: true
+    dest: "{{ eru_bin_dir }}/oras"
+    mode: '0755'
+
+- name: Ensure the process root
+  ansible.builtin.file:
+    path: "{{ node_process_root }}"
+    state: directory
+    mode: '0700'

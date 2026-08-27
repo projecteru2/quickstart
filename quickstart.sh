@@ -1,9 +1,21 @@
 #!/bin/bash -eu
 # Stand up a single-node Eru cluster on this machine.
 # Run it as root on a fresh Ubuntu host: bash quickstart.sh
+#
+# The host becomes an etcd member, core, the resource plugins, eru-cli and one
+# node. A host is exactly one Eru node, so it is either a containerd node or a
+# process node: set ERU_NODE_KIND=process for the latter.
 
 ans_dir=${ANSIBLE_DIR:-/tmp/quickstart}
-etcd_version=${ETCD_VERSION:-v3.6.14}
+node_kind=${ERU_NODE_KIND:-containerd}
+
+case "${node_kind}" in
+  containerd | process) ;;
+  *)
+    echo "ERU_NODE_KIND must be containerd or process, got ${node_kind}" >&2
+    exit 1
+    ;;
+esac
 
 if ! command -v ansible-playbook >/dev/null; then
   apt update
@@ -20,6 +32,15 @@ if [ -z "${ip}" ]; then
   exit 1
 fi
 
+member=$'\n      hosts:\n        '"${ip}:"
+containerd_group=" {}"
+process_group=" {}"
+if [ "${node_kind}" = process ]; then
+  process_group="${member}"
+else
+  containerd_group="${member}"
+fi
+
 cat >inventory.yml <<EOF
 ---
 all:
@@ -28,20 +49,26 @@ all:
       hosts:
         ${ip}:
           etcd_name: etcd0
-      vars:
-        etcd_version: ${etcd_version}
 
     core:
       hosts:
         ${ip}:
 
-    node_docker:
-      hosts:
-        ${ip}:
-          node_docker_name: node-$(echo "${ip}" | tr . -)
+    node_containerd:${containerd_group}
+
+    node_process:${process_group}
 
   vars:
     ansible_connection: local
 EOF
 
 ansible-playbook -i inventory.yml cluster.yml
+
+cat <<EOF
+
+The cluster is up. Core listens on ${ip}:5001 and eru-cli already points at it:
+
+  eru-cli pod nodes eru
+  ./verify.sh
+
+EOF

@@ -1,0 +1,16 @@
+---
+- name: Reload sshd
+  ansible.builtin.systemd_service:
+    name: ssh
+    state: reloaded
+
+- name: Restart journald
+  ansible.builtin.systemd_service:
+    name: systemd-journald
+    state: restarted
+
+- name: Restart the agent
+  ansible.builtin.systemd_service:
+    name: "{{ node_process_agent_service }}"
+    daemon_reload: true
+    state: restarted

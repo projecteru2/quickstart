@@ -1,0 +1,44 @@
+---
+- name: Ensure the plugin directory
+  ansible.builtin.file:
+    path: "{{ plugins_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Ensure the resource-extend staging directory
+  ansible.builtin.file:
+    path: "{{ plugins_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack the resource-extend release
+  ansible.builtin.unarchive:
+    src: "{{ plugins_release_url }}"
+    remote_src: true
+    dest: "{{ plugins_stage_dir }}"
+    creates: "{{ plugins_stage_dir }}/resource-storage"
+
+- name: Install the plugin binaries
+  ansible.builtin.copy:
+    src: "{{ plugins_stage_dir }}/{{ item }}"
+    remote_src: true
+    dest: "{{ plugins_dir }}/{{ item }}"
+    mode: '0755'
+  loop: "{{ plugins_enabled }}"
+  notify: Restart core for the plugins
+
+- name: Render the storage plugin config
+  ansible.builtin.template:
+    src: storage.yaml.j2
+    dest: "{{ plugins_dir }}/storage.yaml"
+    mode: '0644'
+  when: "'resource-storage' in plugins_enabled"
+  notify: Restart core for the plugins
+
+- name: Render the gpu plugin config
+  ansible.builtin.template:
+    src: gpu.yaml.j2
+    dest: "{{ plugins_dir }}/gpu.yaml"
+    mode: '0644'
+  when: "'resource-gpu' in plugins_enabled"
+  notify: Restart core for the plugins

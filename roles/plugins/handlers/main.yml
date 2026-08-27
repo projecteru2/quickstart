@@ -1,0 +1,7 @@
+---
+# The core role has its own restart handler; this role cannot notify it, because
+# a tag-limited run loads core's handlers with core's tags and would skip them.
+- name: Restart core for the plugins
+  ansible.builtin.systemd_service:
+    name: "{{ plugins_core_service }}"
+    state: restarted

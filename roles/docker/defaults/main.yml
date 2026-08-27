@@ -1,3 +1,0 @@
----
-# Port dockerd listens on for the plain TCP API core connects to.
-docker_api_port: 2375

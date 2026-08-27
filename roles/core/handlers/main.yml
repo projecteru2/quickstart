@@ -1,0 +1,6 @@
+---
+- name: Restart core
+  ansible.builtin.systemd_service:
+    name: "{{ core_service }}"
+    daemon_reload: true
+    state: restarted

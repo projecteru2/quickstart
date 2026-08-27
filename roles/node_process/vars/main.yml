@@ -1,0 +1,13 @@
+---
+node_process_ssh_home: "{{ '/root' if eru_ssh_user == 'root' else '/home/' + eru_ssh_user }}"
+
+node_process_oras_stage_dir: "{{ eru_download_dir }}/oras-{{ oras_version }}"
+node_process_oras_file: "oras_{{ oras_version | regex_replace('^v', '') }}_linux_{{ eru_arch }}.tar.gz"
+node_process_oras_url: "https://github.com/oras-project/oras/releases/download/{{ oras_version }}/{{ node_process_oras_file }}"
+
+node_process_agent_stage_dir: "{{ eru_download_dir }}/agent-{{ eru_agent_version }}"
+node_process_agent_file: "agent_{{ eru_agent_version | regex_replace('^v', '') }}_Linux_{{ eru_release_arch }}.tar.gz"
+node_process_agent_url: "https://github.com/projecteru2/agent/releases/download/{{ eru_agent_version }}/{{ node_process_agent_file }}"
+
+node_process_storage_args: "{{ ['--storage=' + node_process_storage] if node_process_storage | length > 0 else [] }}"
+node_process_label_args: "{{ node_process_labels | map('regex_replace', '^', '--label=') | list }}"

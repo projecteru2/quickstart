@@ -1,6 +1,0 @@
----
-- name: Create the pod
-  ansible.builtin.command: "eru-cli pod add {{ eru_pod }}"
-  register: core_pod_add
-  changed_when: core_pod_add.rc == 0
-  failed_when: core_pod_add.rc != 0 and 'exists' not in core_pod_add.stderr

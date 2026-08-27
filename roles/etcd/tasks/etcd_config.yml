@@ -1,26 +1,26 @@
 ---
-- name: Ensure etcd config directory
+- name: Ensure the etcd config directory
   ansible.builtin.file:
-    path: /etc/etcd/
+    path: /etc/etcd
     state: directory
     mode: '0755'
 
-- name: Ensure etcd data directory
+- name: Ensure the etcd data directory
   ansible.builtin.file:
     path: "{{ etcd_data_dir }}"
     state: directory
     mode: '0700'
 
-- name: Render etcd config
+- name: Render the etcd config
   ansible.builtin.template:
     src: etcd.conf.j2
     dest: /etc/etcd/etcd.conf
     mode: '0644'
-  notify: restart etcd
+  notify: Restart etcd
 
-- name: Render etcd systemd unit
+- name: Render the etcd systemd unit
   ansible.builtin.template:
     src: etcd.service.j2
     dest: /etc/systemd/system/etcd.service
     mode: '0644'
-  notify: restart etcd
+  notify: Restart etcd

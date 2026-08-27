@@ -7,18 +7,32 @@
       tags:
         - etcd
 
-- name: Install core
+- name: Install core, its resource plugins and the cli
   hosts: core
   become: true
   roles:
     - role: core
       tags:
         - core
+    - role: plugins
+      tags:
+        - plugins
+    - role: cli
+      tags:
+        - cli
 
-- name: Register the docker nodes
-  hosts: node_docker
+- name: Register the containerd nodes
+  hosts: node_containerd
   become: true
   roles:
-    - role: node_docker
+    - role: node_containerd
       tags:
-        - node_docker
+        - node_containerd
+
+- name: Register the process nodes
+  hosts: node_process
+  become: true
+  roles:
+    - role: node_process
+      tags:
+        - node_process

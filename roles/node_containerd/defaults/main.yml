@@ -1,0 +1,39 @@
+---
+# The name core registers this node under. eru-agent reports status under the
+# same name, so the two must agree; the agent unit gets it as ERU_HOSTNAME.
+node_containerd_name: "{{ ansible_facts['hostname'] }}"
+node_containerd_pod: "{{ eru_pod }}"
+
+# How core reaches this node: containerd://<eru_ssh_user>@<host>:<port>.
+node_containerd_endpoint_host: "{{ inventory_hostname }}"
+node_containerd_ssh_port: 22
+
+# Node capacity. Left empty, the resource plugins take what the engine reports:
+# every cpu, 80% of memory, and 80% of the containerd root filesystem.
+node_containerd_storage: ""
+node_containerd_labels: []
+
+# containerd. The socket and namespace must match core's containerd block.
+node_containerd_service: containerd
+node_containerd_socket: /run/containerd/containerd.sock
+node_containerd_namespace: eru
+
+# cni. node_containerd_network is the conflist name a deploy passes to --network.
+node_containerd_network: eru
+node_containerd_bridge: eru0
+node_containerd_subnet: 10.66.0.0/16
+node_containerd_cni_bin_dir: /opt/cni/bin
+node_containerd_cni_conf_dir: /etc/cni/net.d
+
+# eru-agent.
+node_containerd_agent_service: eru-agent
+node_containerd_agent_api_addr: 127.0.0.1:12345
+node_containerd_heartbeat_interval: 30
+node_containerd_healthcheck_interval: 30
+node_containerd_meta_dir: /run/eru/workloads
+node_containerd_state_dir: /var/lib/eru-agent
+
+# Every workload's output reaches journald under the eru identifier, and
+# journald's stock limits drop it under load.
+node_containerd_journal_rate_limit_interval: 30s
+node_containerd_journal_rate_limit_burst: 100000

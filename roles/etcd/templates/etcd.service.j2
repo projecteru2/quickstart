@@ -7,7 +7,7 @@ Wants=network-online.target
 [Service]
 User=root
 Type=notify
-ExecStart=/usr/bin/etcd --config-file /etc/etcd/etcd.conf
+ExecStart=/usr/local/bin/etcd --config-file /etc/etcd/etcd.conf
 Restart=always
 RestartSec=10s
 LimitNOFILE=40000

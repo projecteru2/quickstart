@@ -1,5 +1,22 @@
 ---
-core_image: ghcr.io/projecteru2/core:latest
-core_cli_image: ghcr.io/projecteru2/cli:latest
-core_container_name: eru-core
-core_config_dir: /etc/eru
+core_service: eru-core
+core_plugin_dir: "{{ eru_config_dir }}/plugins"
+core_plugin_call_timeout: 30s
+core_log_level: info
+core_max_deploy_count: 10000
+
+# The node-side layout core drives over ssh. These must match what the
+# node_containerd and node_process roles put on the nodes.
+core_containerd_socket: /run/containerd/containerd.sock
+core_containerd_namespace: eru
+core_process_root: /var/lib/eru/process
+
+# Optional. Set core_registry_hub to give built images somewhere to be pushed;
+# add a host to core_registry_plain_http when that registry is served over http.
+core_registry_hub: ""
+core_registry_namespace: eru
+core_registry_plain_http: []
+
+# Optional. The pod whose nodes are allowed to build images. Empty leaves
+# build.node_filter unset, which lets any node build.
+core_build_pod: ""

@@ -1,0 +1,43 @@
+---
+- name: Ensure the agent staging directory
+  ansible.builtin.file:
+    path: "{{ node_containerd_agent_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack the agent release
+  ansible.builtin.unarchive:
+    src: "{{ node_containerd_agent_url }}"
+    remote_src: true
+    dest: "{{ node_containerd_agent_stage_dir }}"
+    creates: "{{ node_containerd_agent_stage_dir }}/eru-agent"
+
+# Core writes /usr/local/bin/eru-agent into every container spec as the cni hook
+# and the log shim, and probes it at node add. The path is not configurable.
+- name: Install the agent binary
+  ansible.builtin.copy:
+    src: "{{ node_containerd_agent_stage_dir }}/eru-agent"
+    remote_src: true
+    dest: "{{ eru_bin_dir }}/eru-agent"
+    mode: '0755'
+  notify: Restart the agent
+
+- name: Ensure the eru config directory
+  ansible.builtin.file:
+    path: "{{ eru_config_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Render the agent config
+  ansible.builtin.template:
+    src: agent.yaml.j2
+    dest: "{{ eru_config_dir }}/agent.yaml"
+    mode: '0644'
+  notify: Restart the agent
+
+- name: Render the agent systemd unit
+  ansible.builtin.template:
+    src: eru-agent.service.j2
+    dest: "/etc/systemd/system/{{ node_containerd_agent_service }}.service"
+    mode: '0644'
+  notify: Restart the agent

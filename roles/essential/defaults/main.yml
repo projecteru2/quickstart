@@ -2,7 +2,5 @@
 essential_packages:
   - ca-certificates
   - curl
-  - gnupg
-  - lvm2
-  - openssl
-  - python3-debian
+  - iptables
+  - openssh-client

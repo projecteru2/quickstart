@@ -10,21 +10,27 @@ all:
           etcd_name: etcd1
         192.0.2.13:
           etcd_name: etcd2
-      vars:
-        etcd_version: v3.6.14
 
     core:
       hosts:
         192.0.2.11:
 
-    node_docker:
+    # Nodes that run containers. Each one registers with core as
+    # containerd://root@<host>:22, so core's public key must reach root there —
+    # the playbook installs it. node_containerd_name defaults to the host's own
+    # hostname; set it here to register the node under a different name.
+    node_containerd:
       hosts:
         192.0.2.11:
-          node_docker_name: node-192-0-2-11
         192.0.2.12:
-          node_docker_name: node-192-0-2-12
+          node_containerd_name: worker-2
         192.0.2.13:
-          node_docker_name: node-192-0-2-13
+          node_containerd_name: worker-3
+
+    # Nodes that run process bundles as systemd units instead of containers.
+    # They need no container runtime. Leave the group empty unless you deploy
+    # process workloads.
+    node_process: {}
 
   vars:
     ansible_user: root

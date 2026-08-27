@@ -1,0 +1,9 @@
+etcd:
+  machines:
+{% for host in groups['etcd'] %}
+    - "http://{{ host }}:{{ etcd_client_port }}"
+{% endfor %}
+  prefix: "{{ plugins_storage_etcd_prefix }}"
+
+scheduler:
+  max_deploy_count: {{ plugins_storage_max_deploy_count }}

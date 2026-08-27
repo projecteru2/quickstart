@@ -1,0 +1,15 @@
+---
+# Binaries dropped into plugins_dir. Core loads every executable file it finds
+# there and names the resource after the file, so these names are not free:
+# eru-cli's --storage flag addresses the plugin called resource-storage.
+plugins_enabled:
+  - resource-storage
+  - resource-gpu
+
+plugins_dir: "{{ eru_config_dir }}/plugins"
+plugins_core_service: eru-core
+
+# Both plugins share core's etcd cluster under their own key prefix.
+plugins_storage_etcd_prefix: /eru-storage
+plugins_gpu_etcd_prefix: /eru-gpu
+plugins_storage_max_deploy_count: 1000

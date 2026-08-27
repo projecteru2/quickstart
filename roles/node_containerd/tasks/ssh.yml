@@ -1,0 +1,38 @@
+---
+- name: Ensure the ssh directory
+  ansible.builtin.file:
+    path: "{{ node_containerd_ssh_home }}/.ssh"
+    state: directory
+    owner: "{{ eru_ssh_user }}"
+    group: "{{ eru_ssh_user }}"
+    mode: '0700'
+
+- name: Read core's public key
+  ansible.builtin.slurp:
+    src: "{{ eru_ssh_key }}.pub"
+  delegate_to: "{{ core_host }}"
+  register: node_containerd_core_pubkey
+
+- name: Authorize core's public key
+  ansible.builtin.lineinfile:
+    path: "{{ node_containerd_ssh_home }}/.ssh/authorized_keys"
+    line: "{{ node_containerd_core_pubkey.content | b64decode | trim }}"
+    create: true
+    owner: "{{ eru_ssh_user }}"
+    group: "{{ eru_ssh_user }}"
+    mode: '0600'
+
+- name: Ensure the sshd drop-in directory
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config.d
+    state: directory
+    mode: '0755'
+
+- name: Allow key-based root login
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/10-eru.conf
+    content: |
+      PermitRootLogin prohibit-password
+    mode: '0644'
+  when: eru_ssh_user == 'root'
+  notify: Reload sshd

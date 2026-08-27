@@ -1,25 +1,17 @@
 ---
-- name: Pull core image
-  ansible.builtin.command: "docker pull {{ core_image }}"
-  changed_when: true
+- name: Render the core systemd unit
+  ansible.builtin.template:
+    src: eru-core.service.j2
+    dest: "/etc/systemd/system/{{ core_service }}.service"
+    mode: '0644'
+  notify: Restart core
 
-- name: Remove the running core container
-  ansible.builtin.command: "docker rm -f {{ core_container_name }}"
-  changed_when: true
-  when: upgrade
-
-- name: Run core container
-  ansible.builtin.command: >-
-    docker run -d
-    --name {{ core_container_name }}
-    --net host
-    --restart always
-    -v {{ core_config_dir }}:/etc/eru
-    {{ core_image }}
-    /usr/bin/eru-core
-  register: core_run
-  changed_when: core_run.rc == 0
-  failed_when: core_run.rc != 0 and 'Conflict' not in core_run.stderr
+- name: Launch core
+  ansible.builtin.systemd_service:
+    name: "{{ core_service }}"
+    daemon_reload: true
+    state: started
+    enabled: true
 
 - name: Wait for core to accept connections
   ansible.builtin.wait_for:

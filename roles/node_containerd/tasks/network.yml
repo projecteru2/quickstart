@@ -1,0 +1,12 @@
+---
+- name: Ensure the cni configuration directory
+  ansible.builtin.file:
+    path: "{{ node_containerd_cni_conf_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Render the eru cni network
+  ansible.builtin.template:
+    src: eru.conflist.j2
+    dest: "{{ node_containerd_cni_conf_dir }}/10-{{ node_containerd_network }}.conflist"
+    mode: '0644'

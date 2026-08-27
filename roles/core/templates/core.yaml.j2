@@ -2,33 +2,62 @@ bind: ":{{ core_port }}"
 lock_timeout: 30s
 global_timeout: 300s
 connection_timeout: 10s
+ha_keepalive_interval: 16s
+max_concurrency: 100000
 store: etcd
-wal_file: {{ core_config_dir }}/core.wal
 
 log:
-    level: info
+  level: {{ core_log_level }}
+
+grpc:
+  max_concurrent_streams: 100
+  max_recv_msg_size: 20971520
+  service_discovery_interval: 15s
+  service_heartbeat_interval: 15s
 
 etcd:
-    machines:
+  machines:
 {% for host in groups['etcd'] %}
-        - http://{{ host }}:2379
+    - "http://{{ host }}:{{ etcd_client_port }}"
 {% endfor %}
-    prefix: "/eru"
-    lock_prefix: "__lock__/eru"
+  prefix: "/eru"
+  lock_prefix: "__lock__/eru"
 
-docker:
-    version: "1.32"
-    network_mode: "bridge"
-    use_local_dns: true
-    log:
-        type: "json-file"
-        config:
-            "max-size": "10m"
-    hub: "docker.io"
-    namespace: "projecteru2"
-    build_pod: "{{ eru_pod }}"
+ssh:
+  private_key: {{ eru_ssh_key }}
+  user: {{ eru_ssh_user }}
+
+containerd:
+  socket: {{ core_containerd_socket }}
+  namespace: {{ core_containerd_namespace }}
+
+process:
+  root: {{ core_process_root }}
+  stop_timeout: 10s
 
 scheduler:
-    maxshare: -1
-    sharebase: 100
-    max_deploy_count: 10000
+  maxshare: -1
+  sharebase: 100
+  max_deploy_count: {{ core_max_deploy_count }}
+
+resource_plugin:
+  dir: {{ core_plugin_dir }}
+  call_timeout: {{ core_plugin_call_timeout }}
+{% if core_registry_hub %}
+
+registry:
+  hub: "{{ core_registry_hub }}"
+  namespace: "{{ core_registry_namespace }}"
+{% if core_registry_plain_http %}
+  plain_http:
+{% for host in core_registry_plain_http %}
+    - "{{ host }}"
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if core_build_pod %}
+
+build:
+  node_filter:
+    podname: {{ core_build_pod }}
+{% endif %}

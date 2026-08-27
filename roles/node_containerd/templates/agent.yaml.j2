@@ -1,0 +1,31 @@
+pid: /run/eru-agent.pid
+
+core:
+  - "{{ core_host }}:{{ core_port }}"
+
+store: grpc
+heartbeat_interval: {{ node_containerd_heartbeat_interval }}
+
+runtimes:
+  containerd:
+    socket: {{ node_containerd_socket }}
+    namespace: {{ node_containerd_namespace }}
+
+meta_dir: {{ node_containerd_meta_dir }}
+state_dir: {{ node_containerd_state_dir }}
+
+api:
+  addr: {{ node_containerd_agent_api_addr }}
+
+metrics:
+  step: 10
+
+log:
+  stdout: false
+
+healthcheck:
+  interval: {{ node_containerd_healthcheck_interval }}
+  timeout: 10
+  cache_ttl: 300
+
+global_connection_timeout: 15s

@@ -1,12 +1,13 @@
 ---
-- name: Ensure core config directory
+- name: Ensure the resource plugin directory
   ansible.builtin.file:
-    path: "{{ core_config_dir }}"
+    path: "{{ core_plugin_dir }}"
     state: directory
     mode: '0755'
 
-- name: Render core config
+- name: Render the core config
   ansible.builtin.template:
     src: core.yaml.j2
-    dest: "{{ core_config_dir }}/core.yaml"
+    dest: "{{ eru_config_dir }}/core.yaml"
     mode: '0644'
+  notify: Restart core

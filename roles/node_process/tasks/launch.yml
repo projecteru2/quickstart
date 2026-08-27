@@ -1,0 +1,9 @@
+---
+# The agent asks core for its own node record at startup, so it can only run
+# once the node has been registered.
+- name: Launch the agent
+  ansible.builtin.systemd_service:
+    name: "{{ node_process_agent_service }}"
+    daemon_reload: true
+    state: started
+    enabled: true

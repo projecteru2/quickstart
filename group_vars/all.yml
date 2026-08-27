@@ -1,12 +1,41 @@
 ---
-# Recreate the core and agent containers even when they already run.
-upgrade: false
+# Release tags. Every version the playbook installs is pinned here and nowhere else.
+eru_core_version: v0.1.2
+eru_agent_version: v0.1.1
+eru_cli_version: v0.1.3
+eru_resource_extend_version: v0.1.3
+etcd_version: v3.6.14
+containerd_version: v2.3.4
+runc_version: v1.5.1
+cni_plugins_version: v1.9.1
+oras_version: v1.3.3
 
-# Pod every node joins, and the pod core builds images on.
+# Architecture suffixes. The eru and oras archives spell amd64, the etcd and
+# goreleaser ones spell x86_64.
+eru_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
+eru_release_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' }}"
+
+# Where release archives are unpacked, and where binaries and configs land.
+# eru_bin_dir is not free: core hardcodes /usr/local/bin/eru-agent as the oci hook
+# and log shim it writes into every containerd spec.
+eru_download_dir: /opt/eru/dist
+eru_bin_dir: /usr/local/bin
+eru_config_dir: /etc/eru
+
+# Core's ssh key pair. Core keeps the private half and reaches every node with it;
+# each node authorizes the public half for eru_ssh_user.
+eru_ssh_key: /etc/eru/ssh_key
+eru_ssh_user: root
+
+# Pods. Containerd nodes join eru_pod, process nodes join eru_process_pod.
 eru_pod: eru
+eru_process_pod: proc
 
-# Port core binds its gRPC API to.
-core_port: 5001
+# etcd's ports. Cluster-wide because core and the resource plugins build their
+# machine lists from the etcd group, and cannot see that role's own defaults.
+etcd_client_port: 2379
+etcd_peer_port: 2380
 
-# Host running core; every eru-cli call is delegated to it.
+# Core's grpc address. Every eru-cli call the playbook makes is delegated to core_host.
 core_host: "{{ groups['core'] | first }}"
+core_port: 5001

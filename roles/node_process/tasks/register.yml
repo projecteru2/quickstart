@@ -1,0 +1,32 @@
+---
+- name: Wait for core to accept connections
+  ansible.builtin.wait_for:
+    host: "{{ core_host }}"
+    port: "{{ core_port }}"
+    timeout: 120
+  delegate_to: "{{ core_host }}"
+
+- name: Ensure the pod exists
+  ansible.builtin.command:
+    cmd: "{{ eru_bin_dir }}/eru-cli --eru {{ core_host }}:{{ core_port }} pod add {{ node_process_pod }}"
+  delegate_to: "{{ core_host }}"
+  register: node_process_pod_add
+  changed_when: node_process_pod_add.rc == 0
+  failed_when:
+    - node_process_pod_add.rc != 0
+    - "'exists' not in node_process_pod_add.stderr"
+
+- name: Register the node with core
+  ansible.builtin.command:
+    cmd: >-
+      {{ eru_bin_dir }}/eru-cli --eru {{ core_host }}:{{ core_port }}
+      node add {{ node_process_pod }}
+      --nodename {{ node_process_name }}
+      --endpoint process://{{ eru_ssh_user }}@{{ node_process_endpoint_host }}:{{ node_process_ssh_port }}
+      {{ (node_process_storage_args + node_process_label_args) | join(' ') }}
+  delegate_to: "{{ core_host }}"
+  register: node_process_node_add
+  changed_when: node_process_node_add.rc == 0
+  failed_when:
+    - node_process_node_add.rc != 0
+    - "'exists' not in node_process_node_add.stderr"

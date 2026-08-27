@@ -1,0 +1,21 @@
+---
+- name: Ensure the eru config directory
+  ansible.builtin.file:
+    path: "{{ eru_config_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Generate core's ssh key pair
+  ansible.builtin.command:
+    cmd: ssh-keygen -t ed25519 -N '' -C eru-core -f {{ eru_ssh_key }}
+    creates: "{{ eru_ssh_key }}"
+
+- name: Restrict the private key
+  ansible.builtin.file:
+    path: "{{ eru_ssh_key }}"
+    mode: '0600'
+
+- name: Publish the public key
+  ansible.builtin.file:
+    path: "{{ eru_ssh_key }}.pub"
+    mode: '0644'

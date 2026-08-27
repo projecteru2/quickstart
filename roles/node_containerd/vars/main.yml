@@ -1,0 +1,20 @@
+---
+node_containerd_ssh_home: "{{ '/root' if eru_ssh_user == 'root' else '/home/' + eru_ssh_user }}"
+
+node_containerd_stage_dir: "{{ eru_download_dir }}/containerd-{{ containerd_version }}"
+node_containerd_release_file: "containerd-{{ containerd_version | regex_replace('^v', '') }}-linux-{{ eru_arch }}.tar.gz"
+node_containerd_release_url: "https://github.com/containerd/containerd/releases/download/{{ containerd_version }}/{{ node_containerd_release_file }}"
+
+node_containerd_runc_stage_dir: "{{ eru_download_dir }}/runc-{{ runc_version }}"
+node_containerd_runc_url: "https://github.com/opencontainers/runc/releases/download/{{ runc_version }}/runc.{{ eru_arch }}"
+
+node_containerd_cni_stage_dir: "{{ eru_download_dir }}/cni-plugins-{{ cni_plugins_version }}"
+node_containerd_cni_file: "cni-plugins-linux-{{ eru_arch }}-{{ cni_plugins_version }}.tgz"
+node_containerd_cni_url: "https://github.com/containernetworking/plugins/releases/download/{{ cni_plugins_version }}/{{ node_containerd_cni_file }}"
+
+node_containerd_agent_stage_dir: "{{ eru_download_dir }}/agent-{{ eru_agent_version }}"
+node_containerd_agent_file: "agent_{{ eru_agent_version | regex_replace('^v', '') }}_Linux_{{ eru_release_arch }}.tar.gz"
+node_containerd_agent_url: "https://github.com/projecteru2/agent/releases/download/{{ eru_agent_version }}/{{ node_containerd_agent_file }}"
+
+node_containerd_storage_args: "{{ ['--storage=' + node_containerd_storage] if node_containerd_storage | length > 0 else [] }}"
+node_containerd_label_args: "{{ node_containerd_labels | map('regex_replace', '^', '--label=') | list }}"

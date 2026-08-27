@@ -1,0 +1,31 @@
+---
+# The name core registers this node under. eru-agent reports status under the
+# same name, so the two must agree; the agent unit gets it as ERU_HOSTNAME.
+node_process_name: "{{ ansible_facts['hostname'] }}"
+node_process_pod: "{{ eru_process_pod }}"
+
+# How core reaches this node: process://<eru_ssh_user>@<host>:<port>.
+node_process_endpoint_host: "{{ inventory_hostname }}"
+node_process_ssh_port: 22
+
+# Node capacity. Left empty, the resource plugins take what the engine reports:
+# every cpu, 80% of memory, and 80% of the filesystem holding node_process_root.
+node_process_storage: ""
+node_process_labels: []
+
+# Where core unpacks bundles and keeps the durable copy of each workload record.
+# Must match core's process.root.
+node_process_root: /var/lib/eru/process
+
+# eru-agent.
+node_process_agent_service: eru-agent
+node_process_agent_api_addr: 127.0.0.1:12345
+node_process_heartbeat_interval: 30
+node_process_healthcheck_interval: 30
+node_process_meta_dir: /run/eru/workloads
+node_process_state_dir: /var/lib/eru-agent
+
+# Every workload's output reaches journald under the eru identifier, and
+# journald's stock limits drop it under load.
+node_process_journal_rate_limit_interval: 30s
+node_process_journal_rate_limit_burst: 100000

@@ -1,0 +1,13 @@
+---
+- name: Ensure the journald drop-in directory
+  ansible.builtin.file:
+    path: /etc/systemd/journald.conf.d
+    state: directory
+    mode: '0755'
+
+- name: Raise the journald rate limits
+  ansible.builtin.template:
+    src: journald-eru.conf.j2
+    dest: /etc/systemd/journald.conf.d/10-eru.conf
+    mode: '0644'
+  notify: Restart journald

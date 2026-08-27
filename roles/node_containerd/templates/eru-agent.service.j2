@@ -1,0 +1,20 @@
+[Unit]
+Description=Eru Agent
+Documentation=https://projecteru2.github.io/agent/
+After=network-online.target {{ node_containerd_service }}.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=GOTRACEBACK=crash
+Environment=ERU_HOSTNAME={{ node_containerd_name }}
+ExecStart={{ eru_bin_dir }}/eru-agent --config {{ eru_config_dir }}/agent.yaml
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=10485760
+LimitNPROC=10485760
+LimitCORE=infinity
+RestartKillSignal=SIGUSR1
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+# A process workload runs as a transient unit that logs under
+# SYSLOG_IDENTIFIER=eru, which is where eru-agent reads it back from. journald
+# rate-limits per service rather than per identifier, so the limits are raised
+# for the whole journal.
+[Journal]
+RateLimitIntervalSec={{ node_process_journal_rate_limit_interval }}
+RateLimitBurst={{ node_process_journal_rate_limit_burst }}

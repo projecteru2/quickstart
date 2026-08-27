@@ -1,0 +1,41 @@
+---
+- name: Install the container runtime
+  ansible.builtin.import_tasks: runtime.yml
+  tags:
+    - node_containerd_runtime
+
+- name: Configure the cni network
+  ansible.builtin.import_tasks: network.yml
+  tags:
+    - node_containerd_network
+
+- name: Authorize core over ssh
+  ansible.builtin.import_tasks: ssh.yml
+  tags:
+    - node_containerd_ssh
+
+- name: Raise the journald rate limits
+  ansible.builtin.import_tasks: journald.yml
+  tags:
+    - node_containerd_journald
+
+# Core inspects containerd and logs into the node while adding it, so every
+# service the node role touched has to be live before registration, not at the
+# end of the play where handlers normally run.
+- name: Apply the pending restarts
+  ansible.builtin.meta: flush_handlers
+
+- name: Install the agent
+  ansible.builtin.import_tasks: agent.yml
+  tags:
+    - node_containerd_agent
+
+- name: Register the node with core
+  ansible.builtin.import_tasks: register.yml
+  tags:
+    - node_containerd_register
+
+- name: Launch the agent
+  ansible.builtin.import_tasks: launch.yml
+  tags:
+    - node_containerd_launch

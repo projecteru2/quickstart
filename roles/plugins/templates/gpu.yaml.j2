@@ -1,0 +1,6 @@
+etcd:
+  machines:
+{% for host in groups['etcd'] %}
+    - "http://{{ host }}:{{ etcd_client_port }}"
+{% endfor %}
+  prefix: "{{ plugins_gpu_etcd_prefix }}"

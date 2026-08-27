@@ -1,3 +1,4 @@
 ---
-etcd_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' }}"
-etcd_basename: "etcd-{{ etcd_version }}-linux-{{ etcd_arch }}"
+etcd_basename: "etcd-{{ etcd_version }}-linux-{{ eru_arch }}"
+etcd_release_url: "https://github.com/etcd-io/etcd/releases/download/{{ etcd_version }}/{{ etcd_basename }}.tar.gz"
+etcd_stage_dir: "{{ eru_download_dir }}/{{ etcd_basename }}"

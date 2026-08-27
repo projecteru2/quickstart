@@ -1,0 +1,36 @@
+---
+- name: Install the process node prerequisites
+  ansible.builtin.import_tasks: runtime.yml
+  tags:
+    - node_process_runtime
+
+- name: Authorize core over ssh
+  ansible.builtin.import_tasks: ssh.yml
+  tags:
+    - node_process_ssh
+
+- name: Raise the journald rate limits
+  ansible.builtin.import_tasks: journald.yml
+  tags:
+    - node_process_journald
+
+# Core logs into the node while adding it, so every service the node role
+# touched has to be live before registration, not at the end of the play where
+# handlers normally run.
+- name: Apply the pending restarts
+  ansible.builtin.meta: flush_handlers
+
+- name: Install the agent
+  ansible.builtin.import_tasks: agent.yml
+  tags:
+    - node_process_agent
+
+- name: Register the node with core
+  ansible.builtin.import_tasks: register.yml
+  tags:
+    - node_process_register
+
+- name: Launch the agent
+  ansible.builtin.import_tasks: launch.yml
+  tags:
+    - node_process_launch

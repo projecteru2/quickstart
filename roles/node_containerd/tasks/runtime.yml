@@ -1,0 +1,81 @@
+---
+- name: Ensure the containerd staging directory
+  ansible.builtin.file:
+    path: "{{ node_containerd_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack the containerd release
+  ansible.builtin.unarchive:
+    src: "{{ node_containerd_release_url }}"
+    remote_src: true
+    dest: "{{ node_containerd_stage_dir }}"
+    creates: "{{ node_containerd_stage_dir }}/bin/containerd"
+
+- name: Install the containerd binaries
+  ansible.builtin.copy:
+    src: "{{ node_containerd_stage_dir }}/bin/"
+    remote_src: true
+    dest: "{{ eru_bin_dir }}/"
+    mode: '0755'
+  notify: Restart containerd
+
+- name: Ensure the runc staging directory
+  ansible.builtin.file:
+    path: "{{ node_containerd_runc_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Download runc
+  ansible.builtin.get_url:
+    url: "{{ node_containerd_runc_url }}"
+    dest: "{{ node_containerd_runc_stage_dir }}/runc"
+    mode: '0755'
+
+- name: Install runc
+  ansible.builtin.copy:
+    src: "{{ node_containerd_runc_stage_dir }}/runc"
+    remote_src: true
+    dest: /usr/local/sbin/runc
+    mode: '0755'
+  notify: Restart containerd
+
+- name: Ensure the cni staging directory
+  ansible.builtin.file:
+    path: "{{ node_containerd_cni_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack the cni plugins
+  ansible.builtin.unarchive:
+    src: "{{ node_containerd_cni_url }}"
+    remote_src: true
+    dest: "{{ node_containerd_cni_stage_dir }}"
+    creates: "{{ node_containerd_cni_stage_dir }}/bridge"
+
+- name: Ensure the cni plugin directory
+  ansible.builtin.file:
+    path: "{{ node_containerd_cni_bin_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Install the cni plugins
+  ansible.builtin.copy:
+    src: "{{ node_containerd_cni_stage_dir }}/"
+    remote_src: true
+    dest: "{{ node_containerd_cni_bin_dir }}/"
+    mode: '0755'
+
+- name: Render the containerd systemd unit
+  ansible.builtin.template:
+    src: containerd.service.j2
+    dest: "/etc/systemd/system/{{ node_containerd_service }}.service"
+    mode: '0644'
+  notify: Restart containerd
+
+- name: Launch containerd
+  ansible.builtin.systemd_service:
+    name: "{{ node_containerd_service }}"
+    daemon_reload: true
+    state: started
+    enabled: true

@@ -1,0 +1,28 @@
+{
+  "cniVersion": "1.0.0",
+  "name": "{{ node_containerd_network }}",
+  "plugins": [
+    {
+      "type": "bridge",
+      "bridge": "{{ node_containerd_bridge }}",
+      "isGateway": true,
+      "ipMasq": true,
+      "hairpinMode": true,
+      "ipam": {
+        "type": "host-local",
+        "ranges": [
+          [
+            {
+              "subnet": "{{ node_containerd_subnet }}"
+            }
+          ]
+        ],
+        "routes": [
+          {
+            "dst": "0.0.0.0/0"
+          }
+        ]
+      }
+    }
+  ]
+}

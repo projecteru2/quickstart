@@ -1,0 +1,19 @@
+[Unit]
+Description=Eru Core
+Documentation=https://projecteru2.github.io/core/
+After=network-online.target etcd.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=GOTRACEBACK=crash
+ExecStart={{ eru_bin_dir }}/eru-core --config {{ eru_config_dir }}/core.yaml
+Restart=on-failure
+RestartSec=5s
+TimeoutSec=1200
+LimitNOFILE=10485760
+LimitNPROC=10485760
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,26 @@
+---
+- name: Ensure the cli staging directory
+  ansible.builtin.file:
+    path: "{{ cli_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack the cli release
+  ansible.builtin.unarchive:
+    src: "{{ cli_release_url }}"
+    remote_src: true
+    dest: "{{ cli_stage_dir }}"
+    creates: "{{ cli_stage_dir }}/eru-cli"
+
+- name: Install the cli binary
+  ansible.builtin.copy:
+    src: "{{ cli_stage_dir }}/eru-cli"
+    remote_src: true
+    dest: "{{ eru_bin_dir }}/eru-cli"
+    mode: '0755'
+
+- name: Point eru-cli at core for interactive shells
+  ansible.builtin.template:
+    src: eru.sh.j2
+    dest: "{{ cli_profile_path }}"
+    mode: '0644'

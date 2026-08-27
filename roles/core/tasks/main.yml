@@ -1,4 +1,14 @@
 ---
+- name: Install the core binary
+  ansible.builtin.import_tasks: core_binary.yml
+  tags:
+    - core_binary
+
+- name: Generate core's ssh key pair
+  ansible.builtin.import_tasks: core_ssh.yml
+  tags:
+    - core_ssh
+
 - name: Configure core
   ansible.builtin.import_tasks: core_config.yml
   tags:
@@ -8,13 +18,3 @@
   ansible.builtin.import_tasks: core_launch.yml
   tags:
     - core_launch
-
-- name: Install eru-cli
-  ansible.builtin.import_tasks: core_cli.yml
-  tags:
-    - core_cli
-
-- name: Create the pod
-  ansible.builtin.import_tasks: core_resource.yml
-  tags:
-    - core_resource

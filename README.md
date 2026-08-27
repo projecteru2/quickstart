@@ -1,9 +1,9 @@
 # quickstart
 
 quickstart is the Ansible playbook that stands up an Eru cluster on Ubuntu hosts: an etcd cluster
-for metadata, `eru-core` as the scheduler, and any number of Docker nodes registered with core and
-running `eru-agent`. One inventory file describes the cluster, one command deploys it, and
-`quickstart.sh` collapses the whole thing onto a single machine.
+for metadata, `eru-core` as the scheduler, its resource plugins, and any number of nodes registered
+with core and running `eru-agent`. One inventory file describes the cluster, one command deploys it,
+and `quickstart.sh` collapses the whole thing onto a single machine.
 
 **Documentation: [projecteru2.github.io/quickstart](https://projecteru2.github.io/quickstart/)** (source in [`docs/`](docs/)).
 
@@ -24,39 +24,57 @@ $EDITOR inventory.yml     # your hosts, and which of them run etcd, core and wor
 make up
 ```
 
-Deploy something onto the cluster from the core host, where the playbook installs `eru-cli`:
+## Deploying something
+
+`eru-cli` lands on the core hosts, already pointed at core through `ERU`. A deploy needs a spec
+file: it carries the app name and the entrypoints, while the flags carry the placement and the
+resources.
 
 ```shell
-cat > /tmp/spec.yaml <<'EOF'
-appname: redis
+cat > /tmp/nginx.yaml <<'EOF'
+appname: nginx
 entrypoints:
-  singular:
+  web:
     commands:
-      - --appendonly
-      - "yes"
+      - nginx
+      - -g
+      - "daemon off;"
     publish:
-      - "6379"
+      - "80"
 EOF
 
 eru-cli workload deploy \
-  --pod eru --entry singular --image redis:7-alpine \
-  --network host --count 1 --deploy-strategy fill --nodes-limit 3 \
-  --memory 128M /tmp/spec.yaml
+  --pod eru --entry web --image nginx:alpine \
+  --network eru --count 1 --cpu 1 --memory 256M --storage 1G \
+  /tmp/nginx.yaml
 ```
 
-`--pod` is the node group to deploy on, `--entry` the entrypoint from the spec, `--count` with
-`--deploy-strategy fill --nodes-limit 3` spreads one workload over three nodes, and `--memory` is
-the per-workload limit. `eru-cli pod nodes eru` shows what the cluster now holds.
+`--pod` is the node group to deploy on, `--entry` names an entrypoint from the spec, and `--network`
+is the CNI network the playbook configured on every containerd node — pass `host` instead to share
+the node's network namespace. `--storage` is accounted by the `resource-storage` plugin, which the
+playbook installs alongside core.
+
+`eru-cli pod nodes eru` shows what the cluster holds, and `eru-cli workload list nginx` what is
+running. [`verify.sh`](verify.sh) runs the whole loop — cache the image, deploy, `get`, `exec`,
+`logs`, `stop`, `start`, `remove` — against a freshly deployed cluster:
+
+```shell
+./verify.sh              # or ./verify.sh <nodename>
+```
 
 ## What it installs
 
 | Group | Host gets |
 | --- | --- |
 | `etcd` | etcd, from the upstream release tarball, as a systemd unit |
-| `core` | Docker, the `eru-core` container, and `eru-cli` in `/usr/local/bin` |
-| `node_docker` | Docker, a node registration in core, and the `eru-agent` container |
+| `core` | `eru-core`, the `resource-storage` and `resource-gpu` plugins, and `eru-cli` |
+| `node_containerd` | containerd, runc, the CNI plugins, `eru-agent`, and a node registration |
+| `node_process` | `oras` and `eru-agent`; workloads run as transient systemd units |
 
-A host may belong to several groups; the single-node bootstrap puts it in all three.
+Core reaches every node over SSH with a key pair the playbook generates for it, so nodes expose no
+daemon API of their own. A host may belong to `etcd`, `core` and one node group at once — the
+single-node bootstrap does exactly that — but not to both node groups, because one host is one Eru
+node with one engine.
 
 ## Related projects
 

@@ -1,0 +1,21 @@
+---
+- name: Ensure the core staging directory
+  ansible.builtin.file:
+    path: "{{ core_stage_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack the core release
+  ansible.builtin.unarchive:
+    src: "{{ core_release_url }}"
+    remote_src: true
+    dest: "{{ core_stage_dir }}"
+    creates: "{{ core_stage_dir }}/eru-core"
+
+- name: Install the core binary
+  ansible.builtin.copy:
+    src: "{{ core_stage_dir }}/eru-core"
+    remote_src: true
+    dest: "{{ eru_bin_dir }}/eru-core"
+    mode: '0755'
+  notify: Restart core

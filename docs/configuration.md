@@ -15,7 +15,7 @@ Every version the playbook installs is pinned here and nowhere else, so a bump i
 | `eru_cli_version` | `v0.1.4` | Release tag of `eru-cli` |
 | `eru_resource_extend_version` | `v0.1.4` | Release tag of the resource plugins |
 | `etcd_version` | `v3.6.14` | Release tag of etcd |
-| `containerd_version` | `v2.3.4` | Release tag of containerd |
+| `containerd_version` | `v2.3.5` | Release tag of containerd |
 | `runc_version` | `v1.5.1` | Release tag of runc |
 | `cni_plugins_version` | `v1.9.1` | Release tag of the CNI plugins |
 | `oras_version` | `v1.3.3` | Release tag of `oras`, used on process nodes |
@@ -36,10 +36,12 @@ as the CNI hook and log shim, and that path is compiled into core.
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `essential_packages` | `ca-certificates`, `curl`, `iptables`, `openssh-client` | Packages installed on every host before anything else |
+| `essential_packages` | `ca-certificates`, `curl`, `iptables`, `nftables`, `openssh-client` | Packages installed on every host before anything else |
 
-`iptables` is what the CNI bridge plugin shells out to for outbound NAT; `openssh-client` provides
-the `ssh-keygen` that generates core's key pair.
+`nftables` provides the `nft` the CNI bridge plugin drives for outbound NAT (the conflist sets
+`ipMasqBackend: nftables`, which keeps concurrent container starts off the iptables lock);
+`iptables` stays for tooling that still expects it; `openssh-client` provides the `ssh-keygen`
+that generates core's key pair.
 
 ## etcd
 

@@ -3,4 +3,5 @@ essential_packages:
   - ca-certificates
   - curl
   - iptables
+  - nftables
   - openssh-client

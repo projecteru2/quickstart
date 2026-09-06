@@ -7,6 +7,7 @@
       "bridge": "{{ node_containerd_bridge }}",
       "isGateway": true,
       "ipMasq": true,
+      "ipMasqBackend": "nftables",
       "hairpinMode": true,
       "ipam": {
         "type": "host-local",

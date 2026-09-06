@@ -5,7 +5,7 @@ eru_agent_version: v0.1.2
 eru_cli_version: v0.1.4
 eru_resource_extend_version: v0.1.4
 etcd_version: v3.6.14
-containerd_version: v2.3.4
+containerd_version: v2.3.5
 runc_version: v1.5.1
 cni_plugins_version: v1.9.1
 oras_version: v1.3.3

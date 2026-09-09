@@ -10,10 +10,10 @@ Every version the playbook installs is pinned here and nowhere else, so a bump i
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `eru_core_version` | `v0.1.4` | Release tag of `eru-core` |
-| `eru_agent_version` | `v0.1.2` | Release tag of `eru-agent` |
-| `eru_cli_version` | `v0.1.4` | Release tag of `eru-cli` |
-| `eru_resource_extend_version` | `v0.1.4` | Release tag of the resource plugins |
+| `eru_core_version` | `v0.1.5` | Release tag of `eru-core` |
+| `eru_agent_version` | `v0.1.3` | Release tag of `eru-agent` |
+| `eru_cli_version` | `v0.1.5` | Release tag of `eru-cli` |
+| `eru_resource_extend_version` | `v0.1.5` | Release tag of the resource plugins |
 | `etcd_version` | `v3.6.14` | Release tag of etcd |
 | `containerd_version` | `v2.3.5` | Release tag of containerd |
 | `runc_version` | `v1.5.1` | Release tag of runc |
